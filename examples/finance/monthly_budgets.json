@@ -1,0 +1,23 @@
+[
+  {
+    "id": "budget-food-october",
+    "owner_id": "demo-user",
+    "month": "2026-10",
+    "category": "餐饮",
+    "limit_cny": 1000
+  },
+  {
+    "id": "budget-transport-october",
+    "owner_id": "demo-user",
+    "month": "2026-10",
+    "category": "交通",
+    "limit_cny": 300
+  },
+  {
+    "id": "budget-food-september",
+    "owner_id": "demo-user",
+    "month": "2026-09",
+    "category": "餐饮",
+    "limit_cny": 1000
+  }
+]

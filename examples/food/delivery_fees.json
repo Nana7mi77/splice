@@ -1,0 +1,17 @@
+[
+  {
+    "id": "delivery-qinghe",
+    "merchant_id": "merchant-qinghe",
+    "fee_cny": 3
+  },
+  {
+    "id": "delivery-xiaoman",
+    "merchant_id": "merchant-xiaoman",
+    "fee_cny": 5
+  },
+  {
+    "id": "delivery-shanlan",
+    "merchant_id": "merchant-shanlan",
+    "fee_cny": 2
+  }
+]

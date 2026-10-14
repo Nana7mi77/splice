@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://splice.example/specs/intent.schema.json",
+  "title": "Splice v0.1 Structured Intent",
+  "description": "端侧 Mock 适配器输出语义事实与目标，插件绑定由 Registry 与通用 Planner 完成。",
+  "type": "object",
+  "properties": {
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "requested_outputs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "facts": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+      }
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "fact": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+          },
+          "equals": {}
+        },
+        "required": [
+          "fact",
+          "equals"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "requires_confirmation": {
+      "type": "boolean"
+    },
+    "authorized_effects": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "draft.create"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "place_order": {
+          "const": false
+        },
+        "make_payment": {
+          "const": false
+        }
+      },
+      "required": [
+        "place_order",
+        "make_payment"
+      ],
+      "additionalProperties": false
+    },
+    "language": {
+      "type": "string",
+      "minLength": 1
+    },
+    "utterance": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adapter": {
+      "const": "mock"
+    }
+  },
+  "required": [
+    "goal",
+    "requested_outputs",
+    "facts",
+    "gates",
+    "requires_confirmation",
+    "authorized_effects",
+    "constraints",
+    "language",
+    "utterance",
+    "adapter"
+  ],
+  "additionalProperties": false
+}

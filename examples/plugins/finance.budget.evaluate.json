@@ -1,0 +1,308 @@
+{
+  "id": "finance.budget.evaluate",
+  "version": "0.1.0",
+  "domain": "finance",
+  "description": "按指定月份评估计划消费对餐饮预算及可支付现金的影响，仅输出汇总和判断，不输出原始账户、持仓或流水；模拟扣减不修改资产。",
+  "examples": [
+    "本月餐饮花了多少，还剩多少预算",
+    "检查外卖总额会不会超餐饮预算，预计现金还剩多少"
+  ],
+  "capability": "finance.budget.evaluate",
+  "permissions": [
+    "finance_budget:read"
+  ],
+  "resources": [
+    "cash_accounts",
+    "expense_transactions",
+    "monthly_budgets"
+  ],
+  "preconditions": [],
+  "effects": [],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "amount_cny": {
+        "type": "number",
+        "minimum": 0,
+        "x-fact": "spending.amount_cny"
+      },
+      "month": {
+        "type": "string",
+        "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+        "x-fact": "budget.month"
+      }
+    },
+    "required": [
+      "amount_cny",
+      "month"
+    ],
+    "additionalProperties": false
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "assessment": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string"
+          },
+          "budget_limit_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "spent_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "remaining_cny": {
+            "type": "number"
+          },
+          "planned_amount_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "projected_remaining_cny": {
+            "type": "number"
+          },
+          "cash_available_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "projected_cash_cny": {
+            "type": "number"
+          },
+          "within_budget": {
+            "type": "boolean"
+          },
+          "within_cash": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "month",
+          "budget_limit_cny",
+          "spent_cny",
+          "remaining_cny",
+          "planned_amount_cny",
+          "projected_remaining_cny",
+          "cash_available_cny",
+          "projected_cash_cny",
+          "within_budget",
+          "within_cash"
+        ],
+        "additionalProperties": false,
+        "x-fact": "budget.assessment"
+      },
+      "within_limits": {
+        "type": "boolean",
+        "x-fact": "budget.within_limits"
+      }
+    },
+    "required": [
+      "assessment",
+      "within_limits"
+    ],
+    "additionalProperties": false
+  },
+  "execution": {
+    "steps": [
+      {
+        "op": "read",
+        "resource": "cash_accounts",
+        "as": "accounts"
+      },
+      {
+        "op": "read",
+        "resource": "expense_transactions",
+        "as": "expenses"
+      },
+      {
+        "op": "read",
+        "resource": "monthly_budgets",
+        "as": "budgets"
+      },
+      {
+        "op": "filter",
+        "from": "expenses",
+        "as": "food_expenses",
+        "where": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "args": [
+                "$row.month",
+                "$input.month"
+              ]
+            },
+            {
+              "op": "eq",
+              "args": [
+                "$row.category",
+                "餐饮"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "op": "filter",
+        "from": "budgets",
+        "as": "food_budgets",
+        "where": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "args": [
+                "$row.month",
+                "$input.month"
+              ]
+            },
+            {
+              "op": "eq",
+              "args": [
+                "$row.category",
+                "餐饮"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "op": "assert",
+        "condition": {
+          "op": "eq",
+          "args": [
+            {
+              "op": "count",
+              "args": [
+                "$food_budgets"
+              ]
+            },
+            1
+          ]
+        },
+        "message": "该月餐饮预算缺失或不唯一，不能判断允许消费。"
+      },
+      {
+        "op": "aggregate",
+        "from": "accounts",
+        "as": "cash",
+        "values": {
+          "total_cny": {
+            "op": "sum",
+            "args": [
+              "$rows",
+              "balance_cny"
+            ]
+          }
+        }
+      },
+      {
+        "op": "aggregate",
+        "from": "food_expenses",
+        "as": "spent",
+        "values": {
+          "total_cny": {
+            "op": "sum",
+            "args": [
+              "$rows",
+              "amount_cny"
+            ]
+          }
+        }
+      },
+      {
+        "op": "project",
+        "as": "limit",
+        "values": {
+          "total_cny": {
+            "op": "lookup",
+            "args": [
+              "$food_budgets",
+              "month",
+              "$input.month",
+              "limit_cny"
+            ]
+          }
+        }
+      },
+      {
+        "op": "project",
+        "as": "remaining",
+        "values": {
+          "budget_cny": {
+            "op": "sub",
+            "args": [
+              "$limit.total_cny",
+              "$spent.total_cny"
+            ]
+          },
+          "cash_after_cny": {
+            "op": "sub",
+            "args": [
+              "$cash.total_cny",
+              "$input.amount_cny"
+            ]
+          }
+        }
+      },
+      {
+        "op": "compare",
+        "as": "within_budget",
+        "value": {
+          "op": "lte",
+          "args": [
+            "$input.amount_cny",
+            "$remaining.budget_cny"
+          ]
+        }
+      },
+      {
+        "op": "compare",
+        "as": "within_cash",
+        "value": {
+          "op": "lte",
+          "args": [
+            "$input.amount_cny",
+            "$cash.total_cny"
+          ]
+        }
+      },
+      {
+        "op": "project",
+        "as": "assessment",
+        "values": {
+          "month": "$input.month",
+          "budget_limit_cny": "$limit.total_cny",
+          "spent_cny": "$spent.total_cny",
+          "remaining_cny": "$remaining.budget_cny",
+          "planned_amount_cny": "$input.amount_cny",
+          "projected_remaining_cny": {
+            "op": "sub",
+            "args": [
+              "$remaining.budget_cny",
+              "$input.amount_cny"
+            ]
+          },
+          "cash_available_cny": "$cash.total_cny",
+          "projected_cash_cny": "$remaining.cash_after_cny",
+          "within_budget": "$within_budget",
+          "within_cash": "$within_cash"
+        }
+      }
+    ],
+    "output": {
+      "assessment": "$assessment",
+      "within_limits": {
+        "op": "and",
+        "args": [
+          "$within_budget",
+          "$within_cash"
+        ]
+      }
+    }
+  }
+}

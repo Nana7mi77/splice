@@ -1,0 +1,18 @@
+[
+  {
+    "id": "position-fund",
+    "owner_id": "demo-user",
+    "asset_id": "asset-fund-a",
+    "name": "虚构指数基金 A",
+    "asset_type": "fund",
+    "quantity": 2000
+  },
+  {
+    "id": "position-stock",
+    "owner_id": "demo-user",
+    "asset_id": "asset-stock-b",
+    "name": "虚构股票 B",
+    "asset_type": "stock",
+    "quantity": 100
+  }
+]

@@ -1,0 +1,262 @@
+{
+  "id": "food.order.draft",
+  "version": "0.1.0",
+  "domain": "food",
+  "description": "经授权写入一份未提交的外卖订单草稿；重新读取餐品与配送费校验总价，不能真正下单或付款。",
+  "examples": [
+    "为选中的餐品生成未提交订单草稿",
+    "先生成草稿，不要付款"
+  ],
+  "capability": "food.order.draft",
+  "permissions": [
+    "food:read",
+    "food_order_draft:write"
+  ],
+  "resources": [
+    "food_merchants",
+    "menu_items",
+    "delivery_fees",
+    "food_order_drafts"
+  ],
+  "preconditions": [],
+  "effects": [
+    "draft.create"
+  ],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "menu_item_id": {
+        "type": "string",
+        "minLength": 1,
+        "x-fact": "meal.selected_id"
+      },
+      "max_total_price_cny": {
+        "type": "number",
+        "minimum": 0,
+        "x-fact": "spending.max_cny"
+      },
+      "expected_total_cny": {
+        "type": "number",
+        "minimum": 0,
+        "x-fact": "spending.amount_cny"
+      }
+    },
+    "required": [
+      "menu_item_id",
+      "max_total_price_cny",
+      "expected_total_cny"
+    ],
+    "additionalProperties": false
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "draft": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "owner_id": {
+            "type": "string"
+          },
+          "menu_item_id": {
+            "type": "string"
+          },
+          "merchant_id": {
+            "type": "string"
+          },
+          "merchant_name": {
+            "type": "string"
+          },
+          "item_name": {
+            "type": "string"
+          },
+          "item_price_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "delivery_fee_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "total_price_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "status": {
+            "type": "string",
+            "const": "draft"
+          }
+        },
+        "required": [
+          "id",
+          "owner_id",
+          "menu_item_id",
+          "merchant_id",
+          "merchant_name",
+          "item_name",
+          "item_price_cny",
+          "delivery_fee_cny",
+          "total_price_cny",
+          "status"
+        ],
+        "additionalProperties": false,
+        "x-fact": "order.draft"
+      }
+    },
+    "required": [
+      "draft"
+    ],
+    "additionalProperties": false
+  },
+  "execution": {
+    "steps": [
+      {
+        "op": "read",
+        "resource": "menu_items",
+        "as": "items"
+      },
+      {
+        "op": "read",
+        "resource": "food_merchants",
+        "as": "merchants"
+      },
+      {
+        "op": "read",
+        "resource": "delivery_fees",
+        "as": "fees"
+      },
+      {
+        "op": "filter",
+        "from": "items",
+        "as": "selected",
+        "where": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "args": [
+                "$row.id",
+                "$input.menu_item_id"
+              ]
+            },
+            {
+              "op": "eq",
+              "args": [
+                "$row.available",
+                true
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "op": "assert",
+        "condition": {
+          "op": "eq",
+          "args": [
+            {
+              "op": "count",
+              "args": [
+                "$selected"
+              ]
+            },
+            1
+          ]
+        },
+        "message": "餐品不存在、不可用或标识不唯一。"
+      },
+      {
+        "op": "project",
+        "as": "choice",
+        "values": {
+          "item": {
+            "op": "first",
+            "args": [
+              "$selected"
+            ]
+          }
+        }
+      },
+      {
+        "op": "project",
+        "as": "pricing",
+        "values": {
+          "delivery_fee_cny": {
+            "op": "lookup",
+            "args": [
+              "$fees",
+              "merchant_id",
+              "$choice.item.merchant_id",
+              "fee_cny"
+            ]
+          },
+          "total_price_cny": {
+            "op": "add",
+            "args": [
+              "$choice.item.price_cny",
+              {
+                "op": "lookup",
+                "args": [
+                  "$fees",
+                  "merchant_id",
+                  "$choice.item.merchant_id",
+                  "fee_cny"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "op": "assert",
+        "condition": {
+          "op": "eq",
+          "args": [
+            "$pricing.total_price_cny",
+            "$input.expected_total_cny"
+          ]
+        },
+        "message": "餐品或配送费已变化，请重新选择并评估预算。"
+      },
+      {
+        "op": "assert",
+        "condition": {
+          "op": "lte",
+          "args": [
+            "$pricing.total_price_cny",
+            "$input.max_total_price_cny"
+          ]
+        },
+        "message": "含配送费的总价超过用户授权上限。"
+      },
+      {
+        "op": "insert",
+        "resource": "food_order_drafts",
+        "as": "draft",
+        "values": {
+          "menu_item_id": "$choice.item.id",
+          "merchant_id": "$choice.item.merchant_id",
+          "merchant_name": {
+            "op": "lookup",
+            "args": [
+              "$merchants",
+              "id",
+              "$choice.item.merchant_id",
+              "name"
+            ]
+          },
+          "item_name": "$choice.item.name",
+          "item_price_cny": "$choice.item.price_cny",
+          "delivery_fee_cny": "$pricing.delivery_fee_cny",
+          "total_price_cny": "$pricing.total_price_cny",
+          "status": "draft"
+        }
+      }
+    ],
+    "output": {
+      "draft": "$draft"
+    }
+  }
+}

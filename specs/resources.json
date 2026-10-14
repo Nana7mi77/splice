@@ -1,0 +1,285 @@
+{
+  "food_merchants": {
+    "domain": "food",
+    "read_permissions": [
+      "food:read"
+    ],
+    "write_permissions": [],
+    "private": false
+  },
+  "menu_items": {
+    "domain": "food",
+    "read_permissions": [
+      "food:read"
+    ],
+    "write_permissions": [],
+    "private": false
+  },
+  "delivery_fees": {
+    "domain": "food",
+    "read_permissions": [
+      "food:read"
+    ],
+    "write_permissions": [],
+    "private": false
+  },
+  "cash_accounts": {
+    "domain": "finance",
+    "read_permissions": [
+      "finance:read",
+      "finance_budget:read"
+    ],
+    "write_permissions": [],
+    "private": true
+  },
+  "portfolio_positions": {
+    "domain": "finance",
+    "read_permissions": [
+      "finance:read"
+    ],
+    "write_permissions": [],
+    "private": true
+  },
+  "asset_valuation_snapshots": {
+    "domain": "finance",
+    "read_permissions": [
+      "finance:read"
+    ],
+    "write_permissions": [],
+    "private": true
+  },
+  "expense_transactions": {
+    "domain": "finance",
+    "read_permissions": [
+      "finance_budget:read"
+    ],
+    "write_permissions": [],
+    "private": true
+  },
+  "monthly_budgets": {
+    "domain": "finance",
+    "read_permissions": [
+      "finance_budget:read"
+    ],
+    "write_permissions": [],
+    "private": true
+  },
+  "food_order_drafts": {
+    "domain": "food",
+    "read_permissions": [
+      "food_order_draft:write"
+    ],
+    "write_permissions": [
+      "food_order_draft:write"
+    ],
+    "private": true,
+    "write_schema": {
+      "type": "object",
+      "properties": {
+        "menu_item_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "merchant_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "merchant_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "item_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "item_price_cny": {
+          "type": "number",
+          "minimum": 0
+        },
+        "delivery_fee_cny": {
+          "type": "number",
+          "minimum": 0
+        },
+        "total_price_cny": {
+          "type": "number",
+          "minimum": 0
+        },
+        "status": {
+          "const": "draft"
+        }
+      },
+      "required": [
+        "menu_item_id",
+        "merchant_id",
+        "merchant_name",
+        "item_name",
+        "item_price_cny",
+        "delivery_fee_cny",
+        "total_price_cny",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "check_resources": [
+      "menu_items",
+      "food_merchants",
+      "delivery_fees"
+    ],
+    "checks": [
+      {
+        "condition": {
+          "op": "eq",
+          "args": [
+            "$row.menu_item_id",
+            "$input.menu_item_id"
+          ]
+        },
+        "message": "草稿餐品与输入不一致"
+      },
+      {
+        "condition": {
+          "op": "eq",
+          "args": [
+            "$row.merchant_id",
+            {
+              "op": "lookup",
+              "args": [
+                "$resources.menu_items",
+                "id",
+                "$row.menu_item_id",
+                "merchant_id"
+              ]
+            }
+          ]
+        },
+        "message": "可信餐品字段不一致: merchant_id"
+      },
+      {
+        "condition": {
+          "op": "eq",
+          "args": [
+            "$row.item_name",
+            {
+              "op": "lookup",
+              "args": [
+                "$resources.menu_items",
+                "id",
+                "$row.menu_item_id",
+                "name"
+              ]
+            }
+          ]
+        },
+        "message": "可信餐品字段不一致: item_name"
+      },
+      {
+        "condition": {
+          "op": "eq",
+          "args": [
+            "$row.item_price_cny",
+            {
+              "op": "lookup",
+              "args": [
+                "$resources.menu_items",
+                "id",
+                "$row.menu_item_id",
+                "price_cny"
+              ]
+            }
+          ]
+        },
+        "message": "可信餐品字段不一致: item_price_cny"
+      },
+      {
+        "condition": {
+          "op": "eq",
+          "args": [
+            {
+              "op": "lookup",
+              "args": [
+                "$resources.menu_items",
+                "id",
+                "$row.menu_item_id",
+                "available"
+              ]
+            },
+            true
+          ]
+        },
+        "message": "餐品已不可用"
+      },
+      {
+        "condition": {
+          "op": "eq",
+          "args": [
+            "$row.merchant_name",
+            {
+              "op": "lookup",
+              "args": [
+                "$resources.food_merchants",
+                "id",
+                "$row.merchant_id",
+                "name"
+              ]
+            }
+          ]
+        },
+        "message": "商家名称不一致"
+      },
+      {
+        "condition": {
+          "op": "eq",
+          "args": [
+            "$row.delivery_fee_cny",
+            {
+              "op": "lookup",
+              "args": [
+                "$resources.delivery_fees",
+                "merchant_id",
+                "$row.merchant_id",
+                "fee_cny"
+              ]
+            }
+          ]
+        },
+        "message": "配送费必须匹配可信数据"
+      },
+      {
+        "condition": {
+          "op": "eq",
+          "args": [
+            "$row.total_price_cny",
+            {
+              "op": "add",
+              "args": [
+                "$row.item_price_cny",
+                "$row.delivery_fee_cny"
+              ]
+            }
+          ]
+        },
+        "message": "必须按餐价加配送费计算总价"
+      },
+      {
+        "condition": {
+          "op": "lte",
+          "args": [
+            "$row.total_price_cny",
+            "$input.max_total_price_cny"
+          ]
+        },
+        "message": "草稿超过用户授权价格上限"
+      },
+      {
+        "condition": {
+          "op": "eq",
+          "args": [
+            "$row.total_price_cny",
+            "$input.expected_total_cny"
+          ]
+        },
+        "message": "价格变化后必须重新评估"
+      }
+    ]
+  }
+}

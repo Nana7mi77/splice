@@ -1,0 +1,16 @@
+[
+  {
+    "id": "valuation-fund",
+    "owner_id": "demo-user",
+    "asset_id": "asset-fund-a",
+    "unit_price_cny": 1.5,
+    "as_of": "2026-10-01"
+  },
+  {
+    "id": "valuation-stock",
+    "owner_id": "demo-user",
+    "asset_id": "asset-stock-b",
+    "unit_price_cny": 75,
+    "as_of": "2026-10-01"
+  }
+]

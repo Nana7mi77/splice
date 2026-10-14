@@ -1,0 +1,17 @@
+[
+  {
+    "id": "merchant-qinghe",
+    "name": "青禾食堂",
+    "fictional": true
+  },
+  {
+    "id": "merchant-xiaoman",
+    "name": "小满蒸味",
+    "fictional": true
+  },
+  {
+    "id": "merchant-shanlan",
+    "name": "山岚小厨",
+    "fictional": true
+  }
+]

@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "splice-prototype"
+version = "0.1.0"
+description = "Composable service access for agents, without a predefined business service layer"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
+dependencies = ["jsonschema>=4.18,<5"]
+
+[project.scripts]
+splice = "splice.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.data-files]
+"share/splice/specs" = ["specs/*.json"]
+"share/splice/examples/food" = ["examples/food/*.json"]
+"share/splice/examples/finance" = ["examples/finance/*.json"]
+"share/splice/examples/plugins" = ["examples/plugins/*.json"]
+"share/splice/examples/extensions" = ["examples/extensions/*.json"]

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "meal-chicken",
+    "merchant_id": "merchant-qinghe",
+    "name": "香菇鸡肉盖饭",
+    "category": "盖饭",
+    "taste": "清淡",
+    "price_cny": 21,
+    "available": true
+  },
+  {
+    "id": "meal-fish",
+    "merchant_id": "merchant-xiaoman",
+    "name": "清蒸鱼片盖饭",
+    "category": "盖饭",
+    "taste": "清淡",
+    "price_cny": 23,
+    "available": true
+  },
+  {
+    "id": "meal-beef",
+    "merchant_id": "merchant-xiaoman",
+    "name": "番茄牛肉盖饭",
+    "category": "盖饭",
+    "taste": "清淡",
+    "price_cny": 28,
+    "available": true
+  },
+  {
+    "id": "meal-spicy",
+    "merchant_id": "merchant-shanlan",
+    "name": "香辣豆腐盖饭",
+    "category": "盖饭",
+    "taste": "香辣",
+    "price_cny": 24,
+    "available": true
+  },
+  {
+    "id": "meal-noodles",
+    "merchant_id": "merchant-shanlan",
+    "name": "菌菇汤面",
+    "category": "面条",
+    "taste": "清淡",
+    "price_cny": 18,
+    "available": true
+  }
+]

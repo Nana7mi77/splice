@@ -1,0 +1,169 @@
+{
+  "id": "finance.assets.summary",
+  "version": "0.1.0",
+  "domain": "finance",
+  "description": "汇总虚构现金账户与固定快照下的投资持仓估值，区分可支付现金和未出售投资；只读，不提供投资建议。",
+  "examples": [
+    "我目前现金和投资资产各有多少",
+    "汇总总资产，区分现金与持仓估值"
+  ],
+  "capability": "finance.assets.summary",
+  "permissions": [
+    "finance:read"
+  ],
+  "resources": [
+    "cash_accounts",
+    "portfolio_positions",
+    "asset_valuation_snapshots"
+  ],
+  "preconditions": [],
+  "effects": [],
+  "input_schema": {
+    "type": "object",
+    "properties": {},
+    "required": [],
+    "additionalProperties": false
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "summary": {
+        "type": "object",
+        "properties": {
+          "cash_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "investment_value_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "total_assets_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "valuation_as_of": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string",
+            "const": "CNY"
+          },
+          "cash_is_payable": {
+            "type": "boolean"
+          },
+          "investments_are_payable": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "cash_cny",
+          "investment_value_cny",
+          "total_assets_cny",
+          "valuation_as_of",
+          "currency",
+          "cash_is_payable",
+          "investments_are_payable"
+        ],
+        "additionalProperties": false,
+        "x-fact": "assets.summary"
+      }
+    },
+    "required": [
+      "summary"
+    ],
+    "additionalProperties": false
+  },
+  "execution": {
+    "steps": [
+      {
+        "op": "read",
+        "resource": "cash_accounts",
+        "as": "accounts"
+      },
+      {
+        "op": "read",
+        "resource": "portfolio_positions",
+        "as": "positions"
+      },
+      {
+        "op": "read",
+        "resource": "asset_valuation_snapshots",
+        "as": "valuations"
+      },
+      {
+        "op": "project",
+        "from": "positions",
+        "as": "valued_positions",
+        "values": {
+          "asset_id": "$row.asset_id",
+          "value_cny": {
+            "op": "mul",
+            "args": [
+              "$row.quantity",
+              {
+                "op": "lookup",
+                "args": [
+                  "$valuations",
+                  "asset_id",
+                  "$row.asset_id",
+                  "unit_price_cny"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "op": "aggregate",
+        "from": "accounts",
+        "as": "cash",
+        "values": {
+          "total_cny": {
+            "op": "sum",
+            "args": [
+              "$rows",
+              "balance_cny"
+            ]
+          }
+        }
+      },
+      {
+        "op": "aggregate",
+        "from": "valued_positions",
+        "as": "investments",
+        "values": {
+          "total_cny": {
+            "op": "sum",
+            "args": [
+              "$rows",
+              "value_cny"
+            ]
+          }
+        }
+      },
+      {
+        "op": "project",
+        "as": "summary",
+        "values": {
+          "cash_cny": "$cash.total_cny",
+          "investment_value_cny": "$investments.total_cny",
+          "total_assets_cny": {
+            "op": "add",
+            "args": [
+              "$cash.total_cny",
+              "$investments.total_cny"
+            ]
+          },
+          "valuation_as_of": "2026-10-01",
+          "currency": "CNY",
+          "cash_is_payable": true,
+          "investments_are_payable": false
+        }
+      }
+    ],
+    "output": {
+      "summary": "$summary"
+    }
+  }
+}

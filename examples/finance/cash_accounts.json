@@ -1,0 +1,16 @@
+[
+  {
+    "id": "cash-daily",
+    "owner_id": "demo-user",
+    "name": "虚构日常账户",
+    "balance_cny": 3200,
+    "currency": "CNY"
+  },
+  {
+    "id": "cash-reserve",
+    "owner_id": "demo-user",
+    "name": "虚构备用账户",
+    "balance_cny": 1000,
+    "currency": "CNY"
+  }
+]

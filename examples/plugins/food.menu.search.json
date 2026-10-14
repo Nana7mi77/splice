@@ -1,0 +1,287 @@
+{
+  "id": "food.menu.search",
+  "version": "0.1.0",
+  "domain": "food",
+  "description": "按餐品关键词、口味及含配送费的人民币总价筛选虚构商家菜单，返回候选与最低总价选择；不读取金融数据。",
+  "examples": [
+    "找30元以内、含配送费的清淡盖饭",
+    "按预算比较外卖候选"
+  ],
+  "capability": "food.menu.search",
+  "permissions": [
+    "food:read"
+  ],
+  "resources": [
+    "food_merchants",
+    "menu_items",
+    "delivery_fees"
+  ],
+  "preconditions": [],
+  "effects": [],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "minLength": 1,
+        "x-fact": "meal.query"
+      },
+      "taste": {
+        "type": "string",
+        "minLength": 1,
+        "x-fact": "meal.taste"
+      },
+      "max_total_price_cny": {
+        "type": "number",
+        "minimum": 0,
+        "x-fact": "spending.max_cny"
+      }
+    },
+    "required": [
+      "query",
+      "taste",
+      "max_total_price_cny"
+    ],
+    "additionalProperties": false
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "candidates": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "merchant_id": {
+              "type": "string"
+            },
+            "merchant_name": {
+              "type": "string"
+            },
+            "item_name": {
+              "type": "string"
+            },
+            "item_price_cny": {
+              "type": "number",
+              "minimum": 0
+            },
+            "delivery_fee_cny": {
+              "type": "number",
+              "minimum": 0
+            },
+            "total_price_cny": {
+              "type": "number",
+              "minimum": 0
+            },
+            "taste": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "merchant_id",
+            "merchant_name",
+            "item_name",
+            "item_price_cny",
+            "delivery_fee_cny",
+            "total_price_cny",
+            "taste"
+          ],
+          "additionalProperties": false
+        },
+        "minItems": 1,
+        "x-fact": "meal.candidates"
+      },
+      "selected_id": {
+        "type": "string",
+        "minLength": 1,
+        "x-fact": "meal.selected_id"
+      },
+      "total_price_cny": {
+        "type": "number",
+        "minimum": 0,
+        "x-fact": "spending.amount_cny"
+      }
+    },
+    "required": [
+      "candidates",
+      "selected_id",
+      "total_price_cny"
+    ],
+    "additionalProperties": false
+  },
+  "execution": {
+    "steps": [
+      {
+        "op": "read",
+        "resource": "food_merchants",
+        "as": "merchants"
+      },
+      {
+        "op": "read",
+        "resource": "menu_items",
+        "as": "items"
+      },
+      {
+        "op": "read",
+        "resource": "delivery_fees",
+        "as": "fees"
+      },
+      {
+        "op": "filter",
+        "from": "items",
+        "as": "matching",
+        "where": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "args": [
+                "$row.available",
+                true
+              ]
+            },
+            {
+              "op": "or",
+              "args": [
+                {
+                  "op": "contains",
+                  "args": [
+                    "$row.category",
+                    "$input.query"
+                  ]
+                },
+                {
+                  "op": "contains",
+                  "args": [
+                    "$row.name",
+                    "$input.query"
+                  ]
+                }
+              ]
+            },
+            {
+              "op": "or",
+              "args": [
+                {
+                  "op": "eq",
+                  "args": [
+                    "$input.taste",
+                    "不限"
+                  ]
+                },
+                {
+                  "op": "eq",
+                  "args": [
+                    "$row.taste",
+                    "$input.taste"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "op": "project",
+        "from": "matching",
+        "as": "priced",
+        "values": {
+          "id": "$row.id",
+          "merchant_id": "$row.merchant_id",
+          "merchant_name": {
+            "op": "lookup",
+            "args": [
+              "$merchants",
+              "id",
+              "$row.merchant_id",
+              "name"
+            ]
+          },
+          "item_name": "$row.name",
+          "item_price_cny": "$row.price_cny",
+          "delivery_fee_cny": {
+            "op": "lookup",
+            "args": [
+              "$fees",
+              "merchant_id",
+              "$row.merchant_id",
+              "fee_cny"
+            ]
+          },
+          "total_price_cny": {
+            "op": "add",
+            "args": [
+              "$row.price_cny",
+              {
+                "op": "lookup",
+                "args": [
+                  "$fees",
+                  "merchant_id",
+                  "$row.merchant_id",
+                  "fee_cny"
+                ]
+              }
+            ]
+          },
+          "taste": "$row.taste"
+        }
+      },
+      {
+        "op": "filter",
+        "from": "priced",
+        "as": "affordable",
+        "where": {
+          "op": "lte",
+          "args": [
+            "$row.total_price_cny",
+            "$input.max_total_price_cny"
+          ]
+        }
+      },
+      {
+        "op": "sort",
+        "from": "affordable",
+        "by": "total_price_cny",
+        "direction": "asc",
+        "as": "candidates"
+      },
+      {
+        "op": "assert",
+        "condition": {
+          "op": "gt",
+          "args": [
+            {
+              "op": "count",
+              "args": [
+                "$candidates"
+              ]
+            },
+            0
+          ]
+        },
+        "message": "没有符合口味和含配送费总价上限的餐品。"
+      },
+      {
+        "op": "project",
+        "as": "selection",
+        "values": {
+          "item": {
+            "op": "first",
+            "args": [
+              "$candidates"
+            ]
+          }
+        }
+      }
+    ],
+    "output": {
+      "candidates": "$candidates",
+      "selected_id": "$selection.item.id",
+      "total_price_cny": "$selection.item.total_price_cny"
+    }
+  }
+}
