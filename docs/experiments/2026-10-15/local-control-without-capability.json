@@ -1,0 +1,69 @@
+{
+  "parsed": false,
+  "error": "真实本地模型推理或意图契约验证失败",
+  "inference": {
+    "status": "failed",
+    "adapter": "local",
+    "utterance": "给我挑份清淡的盖饭，送到手最多30元。先核对本月餐饮预算和能用的现金，这餐之后预算至少留15元，符合才建订单草稿，不要真正下单，不要支付。",
+    "adaptation_mode": "dynamic_context",
+    "weights_updated": false,
+    "learning_pack_versions": [],
+    "registry_versions": [
+      {
+        "id": "finance.assets.summary",
+        "version": "0.1.0"
+      },
+      {
+        "id": "finance.budget.evaluate",
+        "version": "0.1.0"
+      },
+      {
+        "id": "food.menu.search",
+        "version": "0.1.0"
+      },
+      {
+        "id": "food.order.draft",
+        "version": "0.1.0"
+      }
+    ],
+    "model": "Qwen/Qwen3-1.7B",
+    "backend": "transformers",
+    "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+    "latency_seconds": 83.191,
+    "peak_memory_bytes": 4145176576,
+    "prompt_tokens": 1023,
+    "generated_tokens": 94,
+    "offline": true,
+    "local_model": "Qwen/Qwen3-1.7B",
+    "model_output": "{\"intent\":{\"goal\":\"food_with_budget_check_and_draft\",\"requested_outputs\":[\"order.draft\",\"budget.assessment\"],\"facts\":{\"meal.query\":\"盖饭\",\"meal.taste\":\"清淡\",\"spending.max_cny\":30,\"budget.month\":\"2026-10\"},\"gates\":[{\"fact\":\"budget.within_limits\",\"equals\":true},{\"fact\":\"budget.remaining_cny >= 15\",\"equals\":true}]},\"unresolved_constraints\":[]}",
+    "format_corrections": [],
+    "model_intent": {
+      "goal": "food_with_budget_check_and_draft",
+      "requested_outputs": [
+        "order.draft",
+        "budget.assessment"
+      ],
+      "facts": {
+        "meal.query": "盖饭",
+        "meal.taste": "清淡",
+        "spending.max_cny": 30,
+        "budget.month": "2026-10"
+      },
+      "gates": [
+        {
+          "fact": "budget.within_limits",
+          "equals": true
+        },
+        {
+          "fact": "budget.remaining_cny >= 15",
+          "equals": true
+        }
+      ]
+    },
+    "reason": "local_inference_or_contract_error",
+    "error": "intent at gates.1.fact: 'budget.remaining_cny >= 15' does not match '^[a-z][a-z0-9_]*(\\\\.[a-z][a-z0-9_]*)+$'"
+  },
+  "cloud_calls": 0,
+  "network_mode": "HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1; cached local snapshot only",
+  "comparison": "same semantic prompt, same utterance, baseline registry without installed learning pack"
+}

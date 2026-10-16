@@ -1,0 +1,28 @@
+{
+  "configured": true,
+  "cached": true,
+  "local_model": "Qwen/Qwen3-1.7B",
+  "backend": "transformers",
+  "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "snapshot_path": "(local Hugging Face cache)",
+  "source": "https://huggingface.co/Qwen/Qwen3-1.7B/tree/70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "download_bytes": 4079437197,
+  "dtype": "bfloat16",
+  "host": {
+    "system": "Linux",
+    "machine": "x86_64",
+    "memory_bytes": 8589934592
+  },
+  "versions": {
+    "huggingface-hub": "0.36.2",
+    "transformers": "4.57.6",
+    "torch": "2.14.1+cpu"
+  },
+  "adaptation_mode": "dynamic_context",
+  "weights_updated": false,
+  "apple_silicon_validation": "not_run",
+  "experiment_dates": [
+    "2026-10-15",
+    "2026-10-16"
+  ]
+}

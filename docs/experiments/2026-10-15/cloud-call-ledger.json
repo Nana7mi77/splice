@@ -1,0 +1,44 @@
+{
+  "total_attempts": 3,
+  "completed_attempts": 2,
+  "probe": {
+    "status": "interrupted_environment_restart",
+    "response_received": false,
+    "usage": "unknown"
+  },
+  "generation": [
+    {
+      "model": "deepseek-flash",
+      "latency_seconds": 11.513,
+      "usage": {
+        "prompt_tokens": 9544,
+        "completion_tokens": 2666,
+        "total_tokens": 12210,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 9544
+      },
+      "response_id": "52f7cee9-c38c-46f7-8c84-0879d2e2f0f4",
+      "status": "completed",
+      "error_category": null
+    }
+  ],
+  "repair": [
+    {
+      "model": "deepseek-flash",
+      "latency_seconds": 9.6,
+      "usage": {
+        "prompt_tokens": 12257,
+        "completion_tokens": 2409,
+        "total_tokens": 14666,
+        "prompt_cache_hit_tokens": 512,
+        "prompt_cache_miss_tokens": 11745
+      },
+      "response_id": "d9af5929-5528-4f16-8192-373592f20489",
+      "status": "completed",
+      "error_category": null
+    }
+  ],
+  "repair_calls": 1,
+  "known_total_tokens": 26876,
+  "billing_amount": "not_returned_by_provider"
+}

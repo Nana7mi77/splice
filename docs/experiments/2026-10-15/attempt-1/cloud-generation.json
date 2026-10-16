@@ -1,0 +1,196 @@
+{
+  "status": "revoked_after_review",
+  "candidate_dir": "(local experiment state)",
+  "requirement": "帮我找一份清淡盖饭，含配送费不超过30元，检查本月餐饮预算和可用现金，只生成订单草稿，不真正下单或支付；吃完这顿饭后，这个月至少还要剩20元餐饮预算。",
+  "created_at": "2026-10-15T15:37:10.538199+00:00",
+  "adaptation_mode": "dynamic_context",
+  "weights_updated": false,
+  "attempts": [
+    {
+      "number": 1,
+      "valid": true
+    }
+  ],
+  "cloud_calls": [
+    {
+      "model": "deepseek-flash",
+      "latency_seconds": 11.513,
+      "usage": {
+        "prompt_tokens": 9544,
+        "completion_tokens": 2666,
+        "total_tokens": 12210,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 9544
+      },
+      "response_id": "52f7cee9-c38c-46f7-8c84-0879d2e2f0f4",
+      "status": "completed",
+      "error_category": null
+    }
+  ],
+  "manifest_sha256": "7697f9fc3f05f52ddeabfc23fd02a7fe3591edda3b5877bcbff074f5e756c5fc",
+  "bundle_sha256": "07c99d4432e79908ef4c57abe66f338e4485f13dc43a599506fcc1a0fc2f0a88",
+  "experiment_sha256": "11d3a144c6e326427b69d6819c6c822e955eafc9beb877195e5e9df7afe5cb3d",
+  "verification": {
+    "passed": true,
+    "schema": true,
+    "permissions": true,
+    "provider_conflicts": false,
+    "teaching_plans": 3,
+    "generated_examples": 3,
+    "cases": [
+      {
+        "name": "reserve_15",
+        "status": "completed",
+        "draft_count": 1,
+        "error_type": null,
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "name": "reserve_20",
+        "status": "blocked",
+        "draft_count": 0,
+        "error_type": "GateRejected",
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": false
+          }
+        ],
+        "passed": true
+      },
+      {
+        "name": "reserve_50",
+        "status": "blocked",
+        "draft_count": 0,
+        "error_type": "GateRejected",
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": false
+          }
+        ],
+        "passed": true
+      },
+      {
+        "name": "reserve_16",
+        "status": "completed",
+        "draft_count": 1,
+        "error_type": null,
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "name": "reserve_16.01",
+        "status": "blocked",
+        "draft_count": 0,
+        "error_type": "GateRejected",
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": false
+          }
+        ],
+        "passed": true
+      },
+      {
+        "name": "reserve_0",
+        "status": "completed",
+        "draft_count": 1,
+        "error_type": null,
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "name": "missing_finance_permission",
+        "status": "blocked",
+        "draft_count": 0,
+        "error_type": "PermissionDenied",
+        "gates": [],
+        "passed": true
+      },
+      {
+        "name": "cash_insufficient",
+        "status": "blocked",
+        "draft_count": 0,
+        "error_type": "GateRejected",
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": false
+          }
+        ],
+        "passed": true
+      }
+    ],
+    "scope": "declared contracts and finite synthetic fixture cases; not a proof of arbitrary semantics"
+  },
+  "publication_approved": true,
+  "published": {
+    "id": "finance.budget.reserve_check",
+    "version": "0.1.0"
+  },
+  "teaching": {
+    "plugin_id": "finance.budget.reserve_check",
+    "plugin_version": "0.1.0",
+    "manifest_sha256": "7697f9fc3f05f52ddeabfc23fd02a7fe3591edda3b5877bcbff074f5e756c5fc",
+    "path": "(local learning store)",
+    "adaptation_mode": "dynamic_context",
+    "weights_updated": false
+  },
+  "review_findings": [
+    "Teaching labels supply computed facts, invent fixture months, and omit requested draft output. The component passed execution tests but the pack cannot be used."
+  ]
+}

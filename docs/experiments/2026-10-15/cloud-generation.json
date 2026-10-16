@@ -1,0 +1,232 @@
+{
+  "status": "published",
+  "candidate_dir": "(local experiment state)",
+  "requirement": "帮我找一份清淡盖饭，含配送费不超过30元，检查本月餐饮预算和可用现金，只生成订单草稿，不真正下单或支付；吃完这顿饭后，这个月至少还要剩20元餐饮预算。",
+  "created_at": "2026-10-15T15:42:52.256538+00:00",
+  "adaptation_mode": "dynamic_context",
+  "weights_updated": false,
+  "attempts": [
+    {
+      "number": 1,
+      "valid": true
+    }
+  ],
+  "cloud_calls": [
+    {
+      "model": "deepseek-flash",
+      "latency_seconds": 9.6,
+      "usage": {
+        "prompt_tokens": 12257,
+        "completion_tokens": 2409,
+        "total_tokens": 14666,
+        "prompt_cache_hit_tokens": 512,
+        "prompt_cache_miss_tokens": 11745
+      },
+      "response_id": "d9af5929-5528-4f16-8192-373592f20489",
+      "status": "completed",
+      "error_category": null
+    }
+  ],
+  "manifest_sha256": "5c7ab506e4a2705fb4d377070d682c96af5092b493c6a476694f5fed7f178cdb",
+  "bundle_sha256": "d2e79d2bd55b7a035351b1be92ec079f07994da01998e5e0459095e0566ca048",
+  "experiment_sha256": "cc13bd4102249ed395f66c284028fc212b14a0deee5eb823393d6b87ab1574e4",
+  "verification": {
+    "passed": true,
+    "schema": true,
+    "permissions": true,
+    "provider_conflicts": false,
+    "teaching_plans": 3,
+    "generated_examples": 3,
+    "cases": [
+      {
+        "name": "reserve_15",
+        "status": "completed",
+        "draft_count": 1,
+        "error_type": null,
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "name": "reserve_20",
+        "status": "blocked",
+        "draft_count": 0,
+        "error_type": "GateRejected",
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": false
+          }
+        ],
+        "passed": true
+      },
+      {
+        "name": "reserve_50",
+        "status": "blocked",
+        "draft_count": 0,
+        "error_type": "GateRejected",
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": false
+          }
+        ],
+        "passed": true
+      },
+      {
+        "name": "reserve_16",
+        "status": "completed",
+        "draft_count": 1,
+        "error_type": null,
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "name": "reserve_16.01",
+        "status": "blocked",
+        "draft_count": 0,
+        "error_type": "GateRejected",
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": false
+          }
+        ],
+        "passed": true
+      },
+      {
+        "name": "reserve_0",
+        "status": "completed",
+        "draft_count": 1,
+        "error_type": null,
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "name": "missing_finance_permission",
+        "status": "blocked",
+        "draft_count": 0,
+        "error_type": "PermissionDenied",
+        "gates": [],
+        "passed": true
+      },
+      {
+        "name": "cash_insufficient",
+        "status": "blocked",
+        "draft_count": 0,
+        "error_type": "GateRejected",
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": false
+          }
+        ],
+        "passed": true
+      },
+      {
+        "name": "larger_budget_same_guard",
+        "status": "completed",
+        "draft_count": 1,
+        "error_type": null,
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "name": "smaller_budget_still_solvent",
+        "status": "blocked",
+        "draft_count": 0,
+        "error_type": "GateRejected",
+        "gates": [
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": false
+          }
+        ],
+        "passed": true
+      }
+    ],
+    "scope": "declared contracts and finite synthetic fixture cases; not a proof of arbitrary semantics"
+  },
+  "publication_approved": true,
+  "published": {
+    "id": "finance.budget.reserve_check",
+    "version": "0.1.0"
+  },
+  "teaching": {
+    "plugin_id": "finance.budget.reserve_check",
+    "plugin_version": "0.1.0",
+    "manifest_sha256": "5c7ab506e4a2705fb4d377070d682c96af5092b493c6a476694f5fed7f178cdb",
+    "path": "(local learning store)",
+    "adaptation_mode": "dynamic_context",
+    "weights_updated": false
+  },
+  "stage": "single_repair_after_independent_review"
+}

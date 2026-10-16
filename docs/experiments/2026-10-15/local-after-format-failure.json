@@ -1,0 +1,110 @@
+{
+  "cloud_calls": 0,
+  "network_mode": "HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1; cached local snapshot only",
+  "tests": {
+    "reserve_15": {
+      "parsed": false,
+      "error": "真实本地模型推理或意图契约验证失败",
+      "inference": {
+        "status": "failed",
+        "adapter": "local",
+        "utterance": "给我挑份清淡的盖饭，送到手最多30元。先核对本月餐饮预算和能用的现金，这餐之后预算至少留15元，符合才建订单草稿，不要真正下单，不要支付。",
+        "adaptation_mode": "dynamic_context",
+        "weights_updated": false,
+        "learning_pack_versions": [
+          {
+            "plugin_id": "finance.budget.reserve_check",
+            "plugin_version": "0.1.0",
+            "manifest_sha256": "5c7ab506e4a2705fb4d377070d682c96af5092b493c6a476694f5fed7f178cdb"
+          }
+        ],
+        "registry_versions": [
+          {
+            "id": "finance.assets.summary",
+            "version": "0.1.0"
+          },
+          {
+            "id": "finance.budget.evaluate",
+            "version": "0.1.0"
+          },
+          {
+            "id": "finance.budget.reserve_check",
+            "version": "0.1.0"
+          },
+          {
+            "id": "food.menu.search",
+            "version": "0.1.0"
+          },
+          {
+            "id": "food.order.draft",
+            "version": "0.1.0"
+          }
+        ],
+        "model": "Qwen/Qwen3-1.7B",
+        "backend": "transformers",
+        "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+        "latency_seconds": 265.618,
+        "peak_memory_bytes": 4348346368,
+        "prompt_tokens": 1844,
+        "generated_tokens": 126,
+        "offline": true,
+        "local_model": "Qwen/Qwen3-1.7B",
+        "model_output": "{\"intent\":{\"goal\":\"为一份清淡盖饭生成订单草稿，同时确认消费不超过30元后本月餐饮预算仍至少保留15元\",\"requested_outputs\":[\"order.draft\",\"budget.assessment\",\"budget.reserve_preserved\"],\"facts\":{\"meal.query\":\"盖饭\",\"meal.taste\":\"清淡\",\"spending.max_cny\":30,\"budget.month\":\"2026-10\",\"budget.min_remaining_cny\":15},\"gates\":[{\"fact\":\"budget.within_limits\",\"equals\":true},{\"fact\":\"budget.reserve_preserved\",\"equals\":true}]},\"unresolved_constraints\":[]}}",
+        "reason": "local_inference_or_contract_error",
+        "error": "Extra data: line 1 column 404 (char 403)"
+      }
+    },
+    "reserve_20": {
+      "parsed": false,
+      "error": "真实本地模型推理或意图契约验证失败",
+      "inference": {
+        "status": "failed",
+        "adapter": "local",
+        "utterance": "给我挑份清淡的盖饭，送到手最多30元。先核对本月餐饮预算和能用的现金，这餐之后预算至少留20元，符合才建订单草稿，不要真正下单，不要支付。",
+        "adaptation_mode": "dynamic_context",
+        "weights_updated": false,
+        "learning_pack_versions": [
+          {
+            "plugin_id": "finance.budget.reserve_check",
+            "plugin_version": "0.1.0",
+            "manifest_sha256": "5c7ab506e4a2705fb4d377070d682c96af5092b493c6a476694f5fed7f178cdb"
+          }
+        ],
+        "registry_versions": [
+          {
+            "id": "finance.assets.summary",
+            "version": "0.1.0"
+          },
+          {
+            "id": "finance.budget.evaluate",
+            "version": "0.1.0"
+          },
+          {
+            "id": "finance.budget.reserve_check",
+            "version": "0.1.0"
+          },
+          {
+            "id": "food.menu.search",
+            "version": "0.1.0"
+          },
+          {
+            "id": "food.order.draft",
+            "version": "0.1.0"
+          }
+        ],
+        "model": "Qwen/Qwen3-1.7B",
+        "backend": "transformers",
+        "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+        "latency_seconds": 170.339,
+        "peak_memory_bytes": 4371152896,
+        "prompt_tokens": 1844,
+        "generated_tokens": 126,
+        "offline": true,
+        "local_model": "Qwen/Qwen3-1.7B",
+        "model_output": "{\"intent\":{\"goal\":\"为一份清淡盖饭生成订单草稿，同时确认消费不超过30元后本月餐饮预算仍至少保留20元\",\"requested_outputs\":[\"order.draft\",\"budget.assessment\",\"budget.reserve_preserved\"],\"facts\":{\"meal.query\":\"盖饭\",\"meal.taste\":\"清淡\",\"spending.max_cny\":30,\"budget.month\":\"2026-10\",\"budget.min_remaining_cny\":20},\"gates\":[{\"fact\":\"budget.within_limits\",\"equals\":true},{\"fact\":\"budget.reserve_preserved\",\"equals\":true}]},\"unresolved_constraints\":[]}}",
+        "reason": "local_inference_or_contract_error",
+        "error": "Extra data: line 1 column 404 (char 403)"
+      }
+    }
+  }
+}
