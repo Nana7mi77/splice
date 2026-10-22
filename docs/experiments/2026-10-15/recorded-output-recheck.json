@@ -1,0 +1,1247 @@
+{
+  "evaluation": "Reprocess previously recorded real model outputs after framing fix; NO NEW MODEL INFERENCE",
+  "cloud_calls": 0,
+  "tests": {
+    "reserve_15": {
+      "inference_recheck": {
+        "status": "parsed",
+        "adapter": "local",
+        "utterance": "给我挑份清淡的盖饭，送到手最多30元。先核对本月餐饮预算和能用的现金，这餐之后预算至少留15元，符合才建订单草稿，不要真正下单，不要支付。",
+        "adaptation_mode": "dynamic_context",
+        "weights_updated": false,
+        "learning_pack_versions": [
+          {
+            "plugin_id": "finance.budget.reserve_check",
+            "plugin_version": "0.1.0",
+            "manifest_sha256": "5c7ab506e4a2705fb4d377070d682c96af5092b493c6a476694f5fed7f178cdb"
+          }
+        ],
+        "registry_versions": [
+          {
+            "id": "finance.assets.summary",
+            "version": "0.1.0"
+          },
+          {
+            "id": "finance.budget.evaluate",
+            "version": "0.1.0"
+          },
+          {
+            "id": "finance.budget.reserve_check",
+            "version": "0.1.0"
+          },
+          {
+            "id": "food.menu.search",
+            "version": "0.1.0"
+          },
+          {
+            "id": "food.order.draft",
+            "version": "0.1.0"
+          }
+        ],
+        "model": "Qwen/Qwen3-1.7B",
+        "backend": "transformers",
+        "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+        "replayed_recorded_output": true,
+        "local_model": "Qwen/Qwen3-1.7B",
+        "model_output": "{\"intent\":{\"goal\":\"为一份清淡盖饭生成订单草稿，同时确认消费不超过30元后本月餐饮预算仍至少保留15元\",\"requested_outputs\":[\"order.draft\",\"budget.assessment\",\"budget.reserve_preserved\"],\"facts\":{\"meal.query\":\"盖饭\",\"meal.taste\":\"清淡\",\"spending.max_cny\":30,\"budget.month\":\"2026-10\",\"budget.min_remaining_cny\":15},\"gates\":[{\"fact\":\"budget.within_limits\",\"equals\":true},{\"fact\":\"budget.reserve_preserved\",\"equals\":true}]},\"unresolved_constraints\":[]}}",
+        "format_corrections": [
+          "removed_one_redundant_closing_brace"
+        ],
+        "model_intent": {
+          "goal": "为一份清淡盖饭生成订单草稿，同时确认消费不超过30元后本月餐饮预算仍至少保留15元",
+          "requested_outputs": [
+            "order.draft",
+            "budget.assessment",
+            "budget.reserve_preserved"
+          ],
+          "facts": {
+            "meal.query": "盖饭",
+            "meal.taste": "清淡",
+            "spending.max_cny": 30,
+            "budget.month": "2026-10",
+            "budget.min_remaining_cny": 15
+          },
+          "gates": [
+            {
+              "fact": "budget.within_limits",
+              "equals": true
+            },
+            {
+              "fact": "budget.reserve_preserved",
+              "equals": true
+            }
+          ]
+        },
+        "intent": {
+          "goal": "为一份清淡盖饭生成订单草稿，同时确认消费不超过30元后本月餐饮预算仍至少保留15元",
+          "requested_outputs": [
+            "order.draft",
+            "budget.assessment",
+            "budget.reserve_preserved"
+          ],
+          "facts": {
+            "meal.query": "盖饭",
+            "meal.taste": "清淡",
+            "spending.max_cny": 30,
+            "budget.month": "2026-10",
+            "budget.min_remaining_cny": 15
+          },
+          "gates": [
+            {
+              "fact": "budget.within_limits",
+              "equals": true
+            },
+            {
+              "fact": "budget.reserve_preserved",
+              "equals": true
+            }
+          ],
+          "adapter": "local",
+          "utterance": "给我挑份清淡的盖饭，送到手最多30元。先核对本月餐饮预算和能用的现金，这餐之后预算至少留15元，符合才建订单草稿，不要真正下单，不要支付。",
+          "authorized_effects": [],
+          "language": "zh-CN",
+          "requires_confirmation": true,
+          "constraints": {
+            "place_order": false,
+            "make_payment": false
+          }
+        },
+        "unresolved_constraints": []
+      },
+      "runtime": {
+        "status": "completed",
+        "intent": {
+          "goal": "为一份清淡盖饭生成订单草稿，同时确认消费不超过30元后本月餐饮预算仍至少保留15元",
+          "requested_outputs": [
+            "order.draft",
+            "budget.assessment",
+            "budget.reserve_preserved"
+          ],
+          "facts": {
+            "meal.query": "盖饭",
+            "meal.taste": "清淡",
+            "spending.max_cny": 30,
+            "budget.month": "2026-10",
+            "budget.min_remaining_cny": 15
+          },
+          "gates": [
+            {
+              "fact": "budget.within_limits",
+              "equals": true
+            },
+            {
+              "fact": "budget.reserve_preserved",
+              "equals": true
+            }
+          ],
+          "adapter": "local",
+          "utterance": "给我挑份清淡的盖饭，送到手最多30元。先核对本月餐饮预算和能用的现金，这餐之后预算至少留15元，符合才建订单草稿，不要真正下单，不要支付。",
+          "authorized_effects": [],
+          "language": "zh-CN",
+          "requires_confirmation": true,
+          "constraints": {
+            "place_order": false,
+            "make_payment": false
+          }
+        },
+        "plan": [
+          {
+            "id": "food.menu.search",
+            "version": "0.1.0",
+            "capability": "food.menu.search",
+            "effects": [],
+            "bindings": {
+              "query": "meal.query",
+              "taste": "meal.taste",
+              "max_total_price_cny": "spending.max_cny"
+            }
+          },
+          {
+            "id": "finance.budget.evaluate",
+            "version": "0.1.0",
+            "capability": "finance.budget.evaluate",
+            "effects": [],
+            "bindings": {
+              "amount_cny": "spending.amount_cny",
+              "month": "budget.month"
+            }
+          },
+          {
+            "id": "finance.budget.reserve_check",
+            "version": "0.1.0",
+            "capability": "finance.budget.reserve_check",
+            "effects": [],
+            "bindings": {
+              "assessment": "budget.assessment",
+              "min_remaining_cny": "budget.min_remaining_cny"
+            }
+          },
+          {
+            "id": "food.order.draft",
+            "version": "0.1.0",
+            "capability": "food.order.draft",
+            "effects": [
+              "draft.create"
+            ],
+            "bindings": {
+              "menu_item_id": "meal.selected_id",
+              "max_total_price_cny": "spending.max_cny",
+              "expected_total_cny": "spending.amount_cny"
+            }
+          }
+        ],
+        "outputs": {
+          "order.draft": {
+            "menu_item_id": "meal-chicken",
+            "merchant_id": "merchant-qinghe",
+            "merchant_name": "青禾食堂",
+            "item_name": "香菇鸡肉盖饭",
+            "item_price_cny": 21,
+            "delivery_fee_cny": 3,
+            "total_price_cny": 24,
+            "status": "draft",
+            "id": "4df3706c-364c-4a3c-82d5-3b5d786c4ae6",
+            "owner_id": "demo-user"
+          },
+          "budget.assessment": {
+            "month": "2026-10",
+            "budget_limit_cny": 1000,
+            "spent_cny": 960,
+            "remaining_cny": 40,
+            "planned_amount_cny": 24,
+            "projected_remaining_cny": 16,
+            "cash_available_cny": 4200,
+            "projected_cash_cny": 4176,
+            "within_budget": true,
+            "within_cash": true
+          },
+          "budget.reserve_preserved": true
+        },
+        "mock": false,
+        "notice": "完全虚构数据；余额仅为计划消费模拟；草稿不会下单、支付或扣减账户。",
+        "trace": [
+          {
+            "event": "bind",
+            "plugin": "food.menu.search",
+            "bindings": {
+              "query": {
+                "fact": "meal.query",
+                "schema_type": "string"
+              },
+              "taste": {
+                "fact": "meal.taste",
+                "schema_type": "string"
+              },
+              "max_total_price_cny": {
+                "fact": "spending.max_cny",
+                "schema_type": "number"
+              }
+            },
+            "inputs": {
+              "query": "盖饭",
+              "taste": "清淡",
+              "max_total_price_cny": 30
+            }
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "read",
+            "resource": "food_merchants",
+            "row_count": 3
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "read",
+            "resource": "menu_items",
+            "row_count": 5
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "read",
+            "resource": "delivery_fees",
+            "row_count": 3
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "filter",
+            "row_count": 3
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "project",
+            "row_count": 3
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "filter",
+            "row_count": 2
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "sort",
+            "row_count": 2
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "assert"
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "project"
+          },
+          {
+            "event": "output",
+            "plugin": "food.menu.search",
+            "output": {
+              "candidates": [
+                {
+                  "id": "meal-chicken",
+                  "merchant_id": "merchant-qinghe",
+                  "merchant_name": "青禾食堂",
+                  "item_name": "香菇鸡肉盖饭",
+                  "item_price_cny": 21,
+                  "delivery_fee_cny": 3,
+                  "total_price_cny": 24,
+                  "taste": "清淡"
+                },
+                {
+                  "id": "meal-fish",
+                  "merchant_id": "merchant-xiaoman",
+                  "merchant_name": "小满蒸味",
+                  "item_name": "清蒸鱼片盖饭",
+                  "item_price_cny": 23,
+                  "delivery_fee_cny": 5,
+                  "total_price_cny": 28,
+                  "taste": "清淡"
+                }
+              ],
+              "selected_id": "meal-chicken",
+              "total_price_cny": 24
+            }
+          },
+          {
+            "event": "bind",
+            "plugin": "finance.budget.evaluate",
+            "bindings": {
+              "amount_cny": {
+                "fact": "spending.amount_cny",
+                "schema_type": "number"
+              },
+              "month": {
+                "fact": "budget.month",
+                "schema_type": "string"
+              }
+            },
+            "inputs": {
+              "amount_cny": 24,
+              "month": "2026-10"
+            }
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "read",
+            "resource": "cash_accounts",
+            "row_count": 2
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "read",
+            "resource": "expense_transactions",
+            "row_count": 5
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "read",
+            "resource": "monthly_budgets",
+            "row_count": 3
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "filter",
+            "row_count": 3
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "filter",
+            "row_count": 1
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "assert"
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "aggregate"
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "aggregate"
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "project"
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "project"
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "compare"
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "compare"
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "project"
+          },
+          {
+            "event": "output",
+            "plugin": "finance.budget.evaluate",
+            "output": {
+              "assessment": {
+                "month": "2026-10",
+                "budget_limit_cny": 1000,
+                "spent_cny": 960,
+                "remaining_cny": 40,
+                "planned_amount_cny": 24,
+                "projected_remaining_cny": 16,
+                "cash_available_cny": 4200,
+                "projected_cash_cny": 4176,
+                "within_budget": true,
+                "within_cash": true
+              },
+              "within_limits": true
+            }
+          },
+          {
+            "event": "bind",
+            "plugin": "finance.budget.reserve_check",
+            "bindings": {
+              "assessment": {
+                "fact": "budget.assessment",
+                "schema_type": "object"
+              },
+              "min_remaining_cny": {
+                "fact": "budget.min_remaining_cny",
+                "schema_type": "number"
+              }
+            },
+            "inputs": {
+              "assessment": {
+                "month": "2026-10",
+                "budget_limit_cny": 1000,
+                "spent_cny": 960,
+                "remaining_cny": 40,
+                "planned_amount_cny": 24,
+                "projected_remaining_cny": 16,
+                "cash_available_cny": 4200,
+                "projected_cash_cny": 4176,
+                "within_budget": true,
+                "within_cash": true
+              },
+              "min_remaining_cny": 15
+            }
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.reserve_check",
+            "op": "compare"
+          },
+          {
+            "event": "output",
+            "plugin": "finance.budget.reserve_check",
+            "output": {
+              "reserve_preserved": true
+            }
+          },
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": true
+          },
+          {
+            "event": "bind",
+            "plugin": "food.order.draft",
+            "bindings": {
+              "menu_item_id": {
+                "fact": "meal.selected_id",
+                "schema_type": "string"
+              },
+              "max_total_price_cny": {
+                "fact": "spending.max_cny",
+                "schema_type": "number"
+              },
+              "expected_total_cny": {
+                "fact": "spending.amount_cny",
+                "schema_type": "number"
+              }
+            },
+            "inputs": {
+              "menu_item_id": "meal-chicken",
+              "max_total_price_cny": 30,
+              "expected_total_cny": 24
+            }
+          },
+          {
+            "event": "step",
+            "plugin": "food.order.draft",
+            "op": "read",
+            "resource": "menu_items",
+            "row_count": 5
+          },
+          {
+            "event": "step",
+            "plugin": "food.order.draft",
+            "op": "read",
+            "resource": "food_merchants",
+            "row_count": 3
+          },
+          {
+            "event": "step",
+            "plugin": "food.order.draft",
+            "op": "read",
+            "resource": "delivery_fees",
+            "row_count": 3
+          },
+          {
+            "event": "step",
+            "plugin": "food.order.draft",
+            "op": "filter",
+            "row_count": 1
+          },
+          {
+            "event": "step",
+            "plugin": "food.order.draft",
+            "op": "assert"
+          },
+          {
+            "event": "step",
+            "plugin": "food.order.draft",
+            "op": "project"
+          },
+          {
+            "event": "step",
+            "plugin": "food.order.draft",
+            "op": "project"
+          },
+          {
+            "event": "step",
+            "plugin": "food.order.draft",
+            "op": "assert"
+          },
+          {
+            "event": "step",
+            "plugin": "food.order.draft",
+            "op": "assert"
+          },
+          {
+            "event": "step",
+            "plugin": "food.order.draft",
+            "op": "insert",
+            "resource": "food_order_drafts"
+          },
+          {
+            "event": "output",
+            "plugin": "food.order.draft",
+            "output": {
+              "draft": {
+                "menu_item_id": "meal-chicken",
+                "merchant_id": "merchant-qinghe",
+                "merchant_name": "青禾食堂",
+                "item_name": "香菇鸡肉盖饭",
+                "item_price_cny": 21,
+                "delivery_fee_cny": 3,
+                "total_price_cny": 24,
+                "status": "draft",
+                "id": "4df3706c-364c-4a3c-82d5-3b5d786c4ae6",
+                "owner_id": "demo-user"
+              }
+            }
+          }
+        ],
+        "audit": [
+          {
+            "plugin": "food.menu.search",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "food_merchants",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "food.menu.search",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "menu_items",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "food.menu.search",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "delivery_fees",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "finance.budget.evaluate",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "cash_accounts",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "finance.budget.evaluate",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "expense_transactions",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "finance.budget.evaluate",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "monthly_budgets",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "food.order.draft",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "menu_items",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "food.order.draft",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "food_merchants",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "food.order.draft",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "delivery_fees",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "food.order.draft",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "food_order_drafts",
+            "action": "write",
+            "decision": "allow"
+          },
+          {
+            "plugin": "food.order.draft",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "menu_items",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "food.order.draft",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "food_merchants",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "food.order.draft",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "delivery_fees",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "action": "transaction",
+            "decision": "commit"
+          }
+        ],
+        "draft_count": 1,
+        "evaluation": "Reprocess previously recorded real model outputs after framing fix; NO NEW MODEL INFERENCE",
+        "fictional_data": true
+      }
+    },
+    "reserve_20": {
+      "inference_recheck": {
+        "status": "parsed",
+        "adapter": "local",
+        "utterance": "给我挑份清淡的盖饭，送到手最多30元。先核对本月餐饮预算和能用的现金，这餐之后预算至少留20元，符合才建订单草稿，不要真正下单，不要支付。",
+        "adaptation_mode": "dynamic_context",
+        "weights_updated": false,
+        "learning_pack_versions": [
+          {
+            "plugin_id": "finance.budget.reserve_check",
+            "plugin_version": "0.1.0",
+            "manifest_sha256": "5c7ab506e4a2705fb4d377070d682c96af5092b493c6a476694f5fed7f178cdb"
+          }
+        ],
+        "registry_versions": [
+          {
+            "id": "finance.assets.summary",
+            "version": "0.1.0"
+          },
+          {
+            "id": "finance.budget.evaluate",
+            "version": "0.1.0"
+          },
+          {
+            "id": "finance.budget.reserve_check",
+            "version": "0.1.0"
+          },
+          {
+            "id": "food.menu.search",
+            "version": "0.1.0"
+          },
+          {
+            "id": "food.order.draft",
+            "version": "0.1.0"
+          }
+        ],
+        "model": "Qwen/Qwen3-1.7B",
+        "backend": "transformers",
+        "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+        "replayed_recorded_output": true,
+        "local_model": "Qwen/Qwen3-1.7B",
+        "model_output": "{\"intent\":{\"goal\":\"为一份清淡盖饭生成订单草稿，同时确认消费不超过30元后本月餐饮预算仍至少保留20元\",\"requested_outputs\":[\"order.draft\",\"budget.assessment\",\"budget.reserve_preserved\"],\"facts\":{\"meal.query\":\"盖饭\",\"meal.taste\":\"清淡\",\"spending.max_cny\":30,\"budget.month\":\"2026-10\",\"budget.min_remaining_cny\":20},\"gates\":[{\"fact\":\"budget.within_limits\",\"equals\":true},{\"fact\":\"budget.reserve_preserved\",\"equals\":true}]},\"unresolved_constraints\":[]}}",
+        "format_corrections": [
+          "removed_one_redundant_closing_brace"
+        ],
+        "model_intent": {
+          "goal": "为一份清淡盖饭生成订单草稿，同时确认消费不超过30元后本月餐饮预算仍至少保留20元",
+          "requested_outputs": [
+            "order.draft",
+            "budget.assessment",
+            "budget.reserve_preserved"
+          ],
+          "facts": {
+            "meal.query": "盖饭",
+            "meal.taste": "清淡",
+            "spending.max_cny": 30,
+            "budget.month": "2026-10",
+            "budget.min_remaining_cny": 20
+          },
+          "gates": [
+            {
+              "fact": "budget.within_limits",
+              "equals": true
+            },
+            {
+              "fact": "budget.reserve_preserved",
+              "equals": true
+            }
+          ]
+        },
+        "intent": {
+          "goal": "为一份清淡盖饭生成订单草稿，同时确认消费不超过30元后本月餐饮预算仍至少保留20元",
+          "requested_outputs": [
+            "order.draft",
+            "budget.assessment",
+            "budget.reserve_preserved"
+          ],
+          "facts": {
+            "meal.query": "盖饭",
+            "meal.taste": "清淡",
+            "spending.max_cny": 30,
+            "budget.month": "2026-10",
+            "budget.min_remaining_cny": 20
+          },
+          "gates": [
+            {
+              "fact": "budget.within_limits",
+              "equals": true
+            },
+            {
+              "fact": "budget.reserve_preserved",
+              "equals": true
+            }
+          ],
+          "adapter": "local",
+          "utterance": "给我挑份清淡的盖饭，送到手最多30元。先核对本月餐饮预算和能用的现金，这餐之后预算至少留20元，符合才建订单草稿，不要真正下单，不要支付。",
+          "authorized_effects": [],
+          "language": "zh-CN",
+          "requires_confirmation": true,
+          "constraints": {
+            "place_order": false,
+            "make_payment": false
+          }
+        },
+        "unresolved_constraints": []
+      },
+      "runtime": {
+        "status": "blocked",
+        "intent": {
+          "goal": "为一份清淡盖饭生成订单草稿，同时确认消费不超过30元后本月餐饮预算仍至少保留20元",
+          "requested_outputs": [
+            "order.draft",
+            "budget.assessment",
+            "budget.reserve_preserved"
+          ],
+          "facts": {
+            "meal.query": "盖饭",
+            "meal.taste": "清淡",
+            "spending.max_cny": 30,
+            "budget.month": "2026-10",
+            "budget.min_remaining_cny": 20
+          },
+          "gates": [
+            {
+              "fact": "budget.within_limits",
+              "equals": true
+            },
+            {
+              "fact": "budget.reserve_preserved",
+              "equals": true
+            }
+          ],
+          "adapter": "local",
+          "utterance": "给我挑份清淡的盖饭，送到手最多30元。先核对本月餐饮预算和能用的现金，这餐之后预算至少留20元，符合才建订单草稿，不要真正下单，不要支付。",
+          "authorized_effects": [],
+          "language": "zh-CN",
+          "requires_confirmation": true,
+          "constraints": {
+            "place_order": false,
+            "make_payment": false
+          }
+        },
+        "plan": [
+          {
+            "id": "food.menu.search",
+            "version": "0.1.0",
+            "capability": "food.menu.search",
+            "effects": [],
+            "bindings": {
+              "query": "meal.query",
+              "taste": "meal.taste",
+              "max_total_price_cny": "spending.max_cny"
+            }
+          },
+          {
+            "id": "finance.budget.evaluate",
+            "version": "0.1.0",
+            "capability": "finance.budget.evaluate",
+            "effects": [],
+            "bindings": {
+              "amount_cny": "spending.amount_cny",
+              "month": "budget.month"
+            }
+          },
+          {
+            "id": "finance.budget.reserve_check",
+            "version": "0.1.0",
+            "capability": "finance.budget.reserve_check",
+            "effects": [],
+            "bindings": {
+              "assessment": "budget.assessment",
+              "min_remaining_cny": "budget.min_remaining_cny"
+            }
+          },
+          {
+            "id": "food.order.draft",
+            "version": "0.1.0",
+            "capability": "food.order.draft",
+            "effects": [
+              "draft.create"
+            ],
+            "bindings": {
+              "menu_item_id": "meal.selected_id",
+              "max_total_price_cny": "spending.max_cny",
+              "expected_total_cny": "spending.amount_cny"
+            }
+          }
+        ],
+        "outputs": {
+          "budget.assessment": {
+            "month": "2026-10",
+            "budget_limit_cny": 1000,
+            "spent_cny": 960,
+            "remaining_cny": 40,
+            "planned_amount_cny": 24,
+            "projected_remaining_cny": 16,
+            "cash_available_cny": 4200,
+            "projected_cash_cny": 4176,
+            "within_budget": true,
+            "within_cash": true
+          },
+          "budget.reserve_preserved": false
+        },
+        "mock": false,
+        "notice": "完全虚构数据；余额仅为计划消费模拟；草稿不会下单、支付或扣减账户。",
+        "error": {
+          "type": "GateRejected",
+          "message": "约束未满足：budget.reserve_preserved；不生成草稿，预算与现金评估见 outputs"
+        },
+        "trace": [
+          {
+            "event": "bind",
+            "plugin": "food.menu.search",
+            "bindings": {
+              "query": {
+                "fact": "meal.query",
+                "schema_type": "string"
+              },
+              "taste": {
+                "fact": "meal.taste",
+                "schema_type": "string"
+              },
+              "max_total_price_cny": {
+                "fact": "spending.max_cny",
+                "schema_type": "number"
+              }
+            },
+            "inputs": {
+              "query": "盖饭",
+              "taste": "清淡",
+              "max_total_price_cny": 30
+            }
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "read",
+            "resource": "food_merchants",
+            "row_count": 3
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "read",
+            "resource": "menu_items",
+            "row_count": 5
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "read",
+            "resource": "delivery_fees",
+            "row_count": 3
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "filter",
+            "row_count": 3
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "project",
+            "row_count": 3
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "filter",
+            "row_count": 2
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "sort",
+            "row_count": 2
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "assert"
+          },
+          {
+            "event": "step",
+            "plugin": "food.menu.search",
+            "op": "project"
+          },
+          {
+            "event": "output",
+            "plugin": "food.menu.search",
+            "output": {
+              "candidates": [
+                {
+                  "id": "meal-chicken",
+                  "merchant_id": "merchant-qinghe",
+                  "merchant_name": "青禾食堂",
+                  "item_name": "香菇鸡肉盖饭",
+                  "item_price_cny": 21,
+                  "delivery_fee_cny": 3,
+                  "total_price_cny": 24,
+                  "taste": "清淡"
+                },
+                {
+                  "id": "meal-fish",
+                  "merchant_id": "merchant-xiaoman",
+                  "merchant_name": "小满蒸味",
+                  "item_name": "清蒸鱼片盖饭",
+                  "item_price_cny": 23,
+                  "delivery_fee_cny": 5,
+                  "total_price_cny": 28,
+                  "taste": "清淡"
+                }
+              ],
+              "selected_id": "meal-chicken",
+              "total_price_cny": 24
+            }
+          },
+          {
+            "event": "bind",
+            "plugin": "finance.budget.evaluate",
+            "bindings": {
+              "amount_cny": {
+                "fact": "spending.amount_cny",
+                "schema_type": "number"
+              },
+              "month": {
+                "fact": "budget.month",
+                "schema_type": "string"
+              }
+            },
+            "inputs": {
+              "amount_cny": 24,
+              "month": "2026-10"
+            }
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "read",
+            "resource": "cash_accounts",
+            "row_count": 2
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "read",
+            "resource": "expense_transactions",
+            "row_count": 5
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "read",
+            "resource": "monthly_budgets",
+            "row_count": 3
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "filter",
+            "row_count": 3
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "filter",
+            "row_count": 1
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "assert"
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "aggregate"
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "aggregate"
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "project"
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "project"
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "compare"
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "compare"
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.evaluate",
+            "op": "project"
+          },
+          {
+            "event": "output",
+            "plugin": "finance.budget.evaluate",
+            "output": {
+              "assessment": {
+                "month": "2026-10",
+                "budget_limit_cny": 1000,
+                "spent_cny": 960,
+                "remaining_cny": 40,
+                "planned_amount_cny": 24,
+                "projected_remaining_cny": 16,
+                "cash_available_cny": 4200,
+                "projected_cash_cny": 4176,
+                "within_budget": true,
+                "within_cash": true
+              },
+              "within_limits": true
+            }
+          },
+          {
+            "event": "bind",
+            "plugin": "finance.budget.reserve_check",
+            "bindings": {
+              "assessment": {
+                "fact": "budget.assessment",
+                "schema_type": "object"
+              },
+              "min_remaining_cny": {
+                "fact": "budget.min_remaining_cny",
+                "schema_type": "number"
+              }
+            },
+            "inputs": {
+              "assessment": {
+                "month": "2026-10",
+                "budget_limit_cny": 1000,
+                "spent_cny": 960,
+                "remaining_cny": 40,
+                "planned_amount_cny": 24,
+                "projected_remaining_cny": 16,
+                "cash_available_cny": 4200,
+                "projected_cash_cny": 4176,
+                "within_budget": true,
+                "within_cash": true
+              },
+              "min_remaining_cny": 20
+            }
+          },
+          {
+            "event": "step",
+            "plugin": "finance.budget.reserve_check",
+            "op": "compare"
+          },
+          {
+            "event": "output",
+            "plugin": "finance.budget.reserve_check",
+            "output": {
+              "reserve_preserved": false
+            }
+          },
+          {
+            "event": "gate",
+            "fact": "budget.within_limits",
+            "accepted": true
+          },
+          {
+            "event": "gate",
+            "fact": "budget.reserve_preserved",
+            "accepted": false
+          }
+        ],
+        "audit": [
+          {
+            "plugin": "food.menu.search",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "food_merchants",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "food.menu.search",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "menu_items",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "food.menu.search",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "delivery_fees",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "finance.budget.evaluate",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "cash_accounts",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "finance.budget.evaluate",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "expense_transactions",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "plugin": "finance.budget.evaluate",
+            "version": "0.1.0",
+            "subject": "demo-user",
+            "resource": "monthly_budgets",
+            "action": "read",
+            "decision": "allow"
+          },
+          {
+            "action": "transaction",
+            "decision": "rollback"
+          }
+        ],
+        "draft_count": 0,
+        "evaluation": "Reprocess previously recorded real model outputs after framing fix; NO NEW MODEL INFERENCE",
+        "fictional_data": true
+      }
+    }
+  }
+}

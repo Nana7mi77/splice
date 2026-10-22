@@ -2,24 +2,27 @@
 
 Splice（Composable Service Access for Agents，面向 Agent 的组合式服务访问）的目标是：Agent 按意图组合访问底层服务，无需预制中间业务 Service。省去的是为具体业务流程人工编写的中间层，底层服务与 Gateway 仍负责资源和执行约束。
 
-Splice 研究从能力生产到意图消费的生命周期：服务侧生产版本化能力，Registry 分发可检索契约，设备把需求表达为目标与约束，Runtime 通过通用原语执行插件，Gateway 保护资源与状态。思想与经济假说见 [THESIS](docs/THESIS.md)；本文说明首版技术边界。
+Splice 研究从能力生产到意图消费的生命周期：服务侧生产版本化能力，Registry 分发可检索契约，设备把需求表达为目标与约束，Runtime 通过通用原语执行插件，Gateway 保护资源与状态。思想与经济假说见 [THESIS](docs/THESIS.md)；本文说明当前技术边界。
 
-首版是本地 Python CLI 原型，使用单用户 `demo-user` 与固定的 `2026-10` 默认数据快照，“本月”不跟随系统时钟。Cloud Harness 与手机端模型分别由明确标注的 Mock 接口模拟；Runtime 对本地虚构资源的操作模拟服务访问与组合，尚未连接真实远程底层服务，也没有云端部署、真机推理、模型训练、真实订单或真实资产操作。
+当前是本地 Python CLI 原型，使用单用户 `demo-user` 与固定的 `2026-10` 默认数据快照，“本月”不跟随系统时钟。默认演示使用明确标注的 Mock；可选真实链路接入 DeepSeek API 和从本地缓存加载的小模型。Runtime 对本地虚构资源的操作模拟服务访问与组合，尚未连接真实远程业务服务，也没有 M1/手机实测、模型训练、真实订单或真实资产操作。实际模型与验证结果见 [实验记录](docs/model-expansion.md)。
 
 ## 四个职责，而非四个部署服务
 
 ```mermaid
 flowchart TD
-  subgraph Production[能力生产：首版本地 Mock]
-    REQ[业务描述 / 受控模板] --> HARNESS[CapabilityProducer / Harness]
-    HARNESS --> CHECK[Manifest 与契约检查]
-    CHECK --> REG[本地版本化 Registry]
+  subgraph Production[能力生产：可选 DeepSeek / 默认 Mock]
+    REQ[能力缺口 / 公开契约] --> HARNESS[CapabilityProducer / Harness]
+    HARNESS --> CHECK[候选契约与独立验收]
+    CHECK --> APPROVE[明确授权本地发布]
+    APPROVE --> REG[本地版本化 Registry]
+    APPROVE --> PACK[版本与哈希绑定的 Learning Pack]
   end
 
-  subgraph Device[意图消费：首版 CLI 模拟手机]
+  subgraph Device[意图消费：本地模型 / 默认 Mock]
     USER[自然语言请求] --> ADAPTER[OnDeviceIntentAdapter]
     ADAPTER --> INTENT[目标事实 / 初始事实 / 条件 / 授权效果]
     REG --> SEARCH[描述词法检索 / 事实契约检索]
+    PACK --> ADAPTER
     INTENT --> SEARCH
     SEARCH --> PLAN[依据 x-fact 契约反向规划与绑定]
     LORA[未来：领域 LoRA / Adapter 热插拔] -.专业解析与 Search 增强.-> ADAPTER
@@ -33,7 +36,7 @@ flowchart TD
   RUNTIME --> RESULT[结果 / 执行轨迹 / 预计消费影响]
 ```
 
-模块分开表达责任，不要求微服务或网络边界。Mock 生产者从受控示例产生 Manifest；未来真实 LLM 生产者仍须经过同一个发布检查流程，不能将生成文本直接提升为执行权限。端侧 Adapter 的替换也不改变 Gateway 的判断权。
+模块分开表达责任，不要求微服务或网络边界。Mock 生产者从受控示例产生 Manifest；真实生产者输出候选声明和教学资料，经独立验证与授权才进入本地 Registry。生成文本不直接获得执行权限。端侧 Adapter 的替换也不改变 Gateway 的判断权。
 
 ## 协议如何连接目标与能力
 
@@ -42,6 +45,10 @@ flowchart TD
 结构化意图包含希望得到的 `requested_outputs`、用户提供的初始 `facts`、执行条件 `gates` 和允许的 `authorized_effects`。它描述“要知道什么、满足什么、允许做什么”，不在 CLI 中指定“先调用 A 再调用 B”。
 
 例如跨域目标需要草稿、计划消费后的餐饮预算与现金余额；初始事实包含餐品类型、总价上限和月份；条件要求预算与现金允许。能力发现和调度依赖 Registry 内真实存在的契约。Mock 解析器只支持三个演示句式族及不生成草稿的外卖搜索变体，可作有限金额、月份与清淡偏好的替换；不认识的复杂约束会拒绝，不构成开放域中文理解能力。
+
+真实本地 Adapter 把当前契约和相关 Learning Pack 作为上下文，请模型返回意图与未解决约束。随后检查 Schema、事实来源、金额是否落入支持的输入以及可否规划；已报告的未解决约束会阻止执行。模型输出的授权效果会被清空，草稿由 CLI 的 `--confirm` 明确授权。模型解析失败时不会切换到 Mock 或云端意图模型。
+
+`run --experiment PATH` 还会检查解析结果是否保留该验收规范的所有 `required_gates`，无论是否启用自动扩展、是否离线，遗漏都阻止执行。这为已指定实验提供独立于模型输出的条件检查。没有验收规范的普通 `run --adapter local` 仍不能证明完整保留了自然语言的全部含义；Schema 合法、模型没有报告未解决条件，均不足以排除整体漏掉一个条件。
 
 ### Manifest 声明版本、契约与执行计划
 
@@ -82,6 +89,8 @@ flowchart LR
 
 首版确认指向生成本地草稿。请求已明确说“生成订单草稿”时，Mock 将 `draft.create` 纳入 `authorized_effects`，无需重复确认；CLI 的 `--confirm` 也可显式授权本次草稿效果。两种方式都不能越过 Gateway 的写权限。`run` 默认只有 `food` 权限配置；跨域请求需显式选择 `--profile combined`，资产概览需 `--profile assets`。三个 `demo` 子场景则自动采用各自的演示授权配置。
 
+真实本地模型路径始终需要 `--confirm` 才能授权草稿；Learning Pack 不携带授权。`--approve-expansion` 另行授权通过验证的候选发布到本地 Registry，它不授权草稿，也不发布到公共市场。
+
 预算条件属于整条意图的 `gates`，由 `Runtime.run` 检查。底层 `Runtime.invoke` 用于单插件契约实验，不会自动补出一个跨域预算计划；Gateway 自身也不会因为写草稿就猜测用户是否要求检查预算。场景 A 因而可以只用外卖权限，场景 C 则必须具备其金融条件需要的权限。
 
 ## Runtime 原语与 Gateway 的区别
@@ -111,12 +120,24 @@ Gateway 掌握可信资源目录、权限规则和写入不变量。授权必须
 
 执行轨迹用于观察候选、Schema 绑定、授权判断和结果，使用虚构数据。真实系统还需要日志脱敏与保留策略；首版不应被描述为已经具备生产级金融隐私保护。
 
+## 失败驱动的能力扩展与教学
+
+本轮扩展协议接受一份独立验收规范，其中声明预期输入输出事实、允许权限与资源、必须保留的条件，以及虚构数据上的预期行为。云端只接收能力缺口、公开契约和有限失败诊断；账户、持仓、消费流水和 Runtime 输出不进入生成请求。验收规范由实验设计者提供，生成模型不能自行决定自己的合格标准。
+
+生成结果包含 Manifest、理由、行为样本和 Learning Pack。验证先检查结构、领域、只读效果、权限范围与精确事实契约，再在隔离 Registry 和内存草稿库中执行模型样本与独立验收。教学例句也必须能绑定新能力，保留原有必需条件，并覆盖验收规范指定的事实组合与目标输出。失败最多允许一次修复；网络或鉴权失败不会自动重试。
+
+通过后候选仍处于 `verified` 状态。明确授权发布时重新检查候选、验收文件的哈希与行为，再写入 Registry 并安装 Learning Pack。当前仅支持新增能力 ID 和只读布尔输出；旧版本更新、数据迁移、任意写入与缺少独立验收的自动发布不在范围内。
+
+Learning Pack 绑定插件 ID、版本、Manifest SHA-256、输入依赖、权限与例句。导入时检查契约；读取时只使用仍与当前 Registry 匹配的版本。端侧通过词法检索选取相关教学资料，在新进程里重新构造动态上下文。`adaptation_mode=dynamic_context`、`weights_updated=false` 表示配置与上下文更新，没有权重训练或向量学习。持久化安装不等于模型必然理解，必须另外验证新措辞和新数值。
+
+这一机制把预算保留判断放入生成声明，复用 `compare` 等原语。没有新增按预算保留插件 ID 路由的 Handler；独立实验文件中的领域契约与期望结果仍是人工投入，应计入扩展成本。
+
 ## 当前原型与未来增强
 
 | 当前实验 | 后续研究 |
 | --- | --- |
 | 本地文件 Registry、数字版本、词法描述搜索与事实契约检索 | 来源认证、撤销、兼容性、多源发现与检索评测 |
-| MockCapabilityProducer 与有限请求适配器 | 可选 LLM 生产、真实端侧小模型 |
+| Mock 与可选真实云端生产者、本地模型 Adapter、动态 Learning Pack | 多措辞评测、M1 真机验证、教学可靠性与版本迁移 |
 | 受限声明式依赖与通用操作 | 复杂组合、重规划、缓存与自动编译 |
 | 单用户虚构资源、SQLite 本地草稿 | 多租户隔离、预算预占、真实业务授权 |
 | 领域 LoRA 不参与运行 | 热插拔提升意图解析、Query Rewrite、召回、重排与专业知识检索 |

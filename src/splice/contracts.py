@@ -85,3 +85,20 @@ def validate_manifest(manifest):
 
 def validate_intent(intent):
     validate_data(intent, schema("intent"), "intent")
+
+
+def validate_effect_guards(intent, plan):
+    """The local expansion protocol treats planned boolean outputs as guards.
+
+    A model may not request an assessment and then omit its decision when a
+    write is planned. This structural check cannot prove language completeness.
+    """
+    if not any(manifest["effects"] for manifest in plan):
+        return
+    gates = {gate["fact"]: gate["equals"] for gate in intent["gates"]}
+    for manifest in plan:
+        if manifest["effects"]:
+            continue
+        for prop in manifest["output_schema"]["properties"].values():
+            if prop.get("type") == "boolean" and gates.get(prop["x-fact"]) is not True:
+                raise ContractError(f"Planned boolean guard must be required before effects: {prop['x-fact']}")

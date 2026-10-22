@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0",
+  "plugin_id": "finance.budget.reserve_check",
+  "plugin_version": "0.1.0",
+  "manifest_sha256": "7697f9fc3f05f52ddeabfc23fd02a7fe3591edda3b5877bcbff074f5e756c5fc",
+  "domain": "finance",
+  "description": "只读校验计划餐饮消费后是否能保留用户指定的最低剩余预算，仅输出布尔判断，不读取或修改原始账户数据。",
+  "keywords": [
+    "餐饮预算",
+    "剩余预算",
+    "最低保留",
+    "预算底线",
+    "只读校验",
+    "订单草稿前置检查"
+  ],
+  "examples": [
+    {
+      "utterance": "本月餐饮预算还够吗？如果这顿花15元，还要剩至少20元。",
+      "intent": {
+        "goal": "检查本月餐饮预算在本顿花费15元后是否仍至少保留20元",
+        "requested_outputs": [
+          "budget.reserve_preserved",
+          "budget.assessment"
+        ],
+        "facts": {
+          "budget.month": "2025-06",
+          "spending.amount_cny": 15,
+          "budget.min_remaining_cny": 20
+        },
+        "gates": [
+          {
+            "fact": "budget.within_limits",
+            "equals": true
+          },
+          {
+            "fact": "budget.reserve_preserved",
+            "equals": true
+          }
+        ],
+        "requires_confirmation": false,
+        "authorized_effects": [],
+        "constraints": {
+          "place_order": false,
+          "make_payment": false
+        },
+        "language": "zh-CN",
+        "utterance": "本月餐饮预算还够吗？如果这顿花15元，还要剩至少20元。",
+        "adapter": "local"
+      }
+    },
+    {
+      "utterance": "先看看我本月餐饮预算，消费50元后至少保留20元。",
+      "intent": {
+        "goal": "检查本月餐饮预算在消费50元后是否仍至少保留20元",
+        "requested_outputs": [
+          "budget.reserve_preserved",
+          "budget.assessment"
+        ],
+        "facts": {
+          "budget.month": "2025-07",
+          "spending.amount_cny": 50,
+          "budget.min_remaining_cny": 20
+        },
+        "gates": [
+          {
+            "fact": "budget.within_limits",
+            "equals": true
+          },
+          {
+            "fact": "budget.reserve_preserved",
+            "equals": true
+          }
+        ],
+        "requires_confirmation": false,
+        "authorized_effects": [],
+        "constraints": {
+          "place_order": false,
+          "make_payment": false
+        },
+        "language": "zh-CN",
+        "utterance": "先看看我本月餐饮预算，消费50元后至少保留20元。",
+        "adapter": "local"
+      }
+    },
+    {
+      "utterance": "晚餐想点份清淡盖饭，总价预算15元，吃完后这个月餐饮预算至少剩20元；先只生成草稿，别下单。",
+      "intent": {
+        "goal": "为一份清淡盖饭生成订单草稿，同时确认消费15元后本月餐饮预算仍至少保留20元",
+        "requested_outputs": [
+          "meal.candidates",
+          "meal.selected_id",
+          "budget.reserve_preserved",
+          "budget.assessment"
+        ],
+        "facts": {
+          "meal.query": "盖饭",
+          "meal.taste": "清淡",
+          "spending.max_cny": 15,
+          "budget.month": "2025-06",
+          "spending.amount_cny": 15,
+          "budget.min_remaining_cny": 20
+        },
+        "gates": [
+          {
+            "fact": "budget.within_limits",
+            "equals": true
+          },
+          {
+            "fact": "budget.reserve_preserved",
+            "equals": true
+          }
+        ],
+        "requires_confirmation": true,
+        "authorized_effects": [],
+        "constraints": {
+          "place_order": false,
+          "make_payment": false
+        },
+        "language": "zh-CN",
+        "utterance": "晚餐想点份清淡盖饭，总价预算15元，吃完后这个月餐饮预算至少剩20元；先只生成草稿，别下单。",
+        "adapter": "local"
+      }
+    }
+  ],
+  "negative_examples": [
+    {
+      "utterance": "直接帮我把这份盖饭下单并支付。",
+      "reason": "该请求要求真实下单与支付，超出只读预算校验和订单草稿的能力范围；系统仅允许生成草稿，禁止真实交易。"
+    },
+    {
+      "utterance": "告诉我我的现金账户余额和所有持仓明细。",
+      "reason": "请求访问原始现金账户和持仓明细，属于隐私金融数据，且超出预算底线校验所需的最小事实范围。"
+    }
+  ],
+  "fact_dependencies": {
+    "budget.reserve_preserved": [
+      "budget.assessment",
+      "budget.min_remaining_cny"
+    ]
+  },
+  "required_permissions": [
+    "finance_budget:read"
+  ],
+  "supported_manifest_versions": [
+    "0.1.0"
+  ],
+  "adaptation_mode": "dynamic_context"
+}

@@ -8,7 +8,7 @@ Agent 按意图组合访问底层服务，无需预制中间业务 Service。可
 
 Splice 提出 **cloud-produced, on-device-intent, data-driven-plugin** 的分工：云端高能力模型在 Harness 中生产版本化能力；终端轻量模型理解目标并发现能力；统一 Runtime 根据数据契约组合执行；Gateway 保留数据、授权与不可违反状态转移的可信边界。
 
-**当前交付：思想纲领 + 架构 RFC + 可运行的离线技术原型。** 生产侧与端侧都是明确标注的 Mock；首版通过本地虚构数据和 Runtime 模拟服务访问与组合，尚未接入真实远程底层服务、真实模型或手机部署，也没有规模验证。项目名称为 **Splice**，许可证为 [Apache-2.0](LICENSE)。
+**当前版本 0.2.0：思想纲领 + 架构 RFC + 可运行原型 + 可选真实模型链路。** 默认演示保留离线 Mock；新增 DeepSeek 能力生产、真实本地模型意图解析，以及候选验证、发布和动态教学。2026-10-15 使用 `deepseek-flash` 生成预算保留检查插件；首轮教学包经审查撤销，一次修复后的组件与教学包通过十个独立用例和三组教学标签检查。修复后的本地 Qwen3 在新进程中离线处理新措辞，按保留 15 元条件生成 24 元草稿，预计预算剩 16 元、云调用为零。真实模型的成功、失败与闭环验证范围分别记录在 [模型实验记录](docs/model-expansion.md)。底层资源仍是本地虚构数据，尚未接入真实远程业务服务或完成 M1/手机实测。项目名称为 **Splice**，许可证为 [Apache-2.0](LICENSE)。
 
 先读 [思想纲领 THESIS](docs/THESIS.md)，再看 [架构与边界](ARCHITECTURE.md) 和 [RFC-0001](RFC/0001-intent-driven-software.md)。这三层分别讨论产业假说、可研究的架构命题和本版能检验的行为，不能互相替代。
 
@@ -32,6 +32,14 @@ PYTHONPATH=src python -m splice demo combined
 ```
 
 CLI 在当前目录的 `.splice/` 下保存本地 Registry 和 SQLite 草稿。可用 `--state-dir PATH` 选择独立实验目录；重复运行会新增草稿，草稿不会占用预算。虚构数据固定在 **2026-10**，“本月”不跟随系统日期。
+
+## 可选：真实模型与动态能力扩展
+
+真实链路把一次未知约束转成可审查的能力候选：**Fail → Generate → Validate → Publish → Teach → Retry**。例如“消费后餐饮预算至少保留 20 元”，需要在原有预算与现金检查之外添加一个独立只读判断。新逻辑由云端生成 Manifest，执行仍使用原有 Runtime 原语。
+
+教学采用 `adaptation_mode=dynamic_context`：把绑定插件版本与内容哈希的 Learning Pack 安装到本地，每次解析按当前 Registry 读取契约和相关例句。没有训练权重、LoRA 或向量索引。候选发布和草稿写入分别需要明确授权。携带 `--experiment` 的运行还会核对验收规范要求的全部条件；普通开放请求的语义完整性仍可能受模型漏约束影响。
+
+安装模型、配置密钥、运行云端生成和离线重试的步骤见 [真实模型与动态能力实验](docs/model-expansion.md)。该流程当前需要人工提供独立验收契约和样本，只支持新增 ID 的只读布尔判断能力；它还不是任意需求的自主软件生产器。Mac MLX 路径已实现，M1 8GB 性能与兼容性仍需真机验证。
 
 ## 外卖 × 个人资产：同一个生活目标
 
@@ -135,8 +143,8 @@ python -m unittest discover -s tests -v
 
 | 机制 | 已实现 | 尚未实现 / 限制 |
 | --- | --- | --- |
-| 能力生产 | `CapabilityProducer` 接口、Mock 模板、Schema 检查、不可覆盖的版本发布 | `LLMCapabilityProducer` 仅扩展占位；没有真实模型生成和自主验证 |
-| 意图消费 | `OnDeviceIntentAdapter`、受限确定性中文样本解析 | 无手机部署、开放域 NLU 或端侧推理实测 |
+| 能力生产 | Mock 模板；真实 DeepSeek JSON 生产者；Schema、独立验收、最多一次修复、明确授权发布 | 当前扩展仅新增只读布尔判断；需提供验收规范，未实现旧版本迁移或任意自主扩展 |
+| 意图消费 | Mock 样本解析；真实本地模型 Adapter；随版本导入的动态教学上下文 | 小模型可能生成错误契约并被拒绝；无开放域准确率、M1 或手机实测结论 |
 | 能力发现 | 英文词和中文双字词的描述检索；按 `x-fact` 精确查生产者 | 描述搜索不决定可执行性；新事实语义需要约定，多提供者歧义拒绝 |
 | 规划与执行 | 受限无环依赖、参数与输出校验、8 种通用步骤操作 | 无任意分支/循环、未知目标分解、补偿或兼容版本求解 |
 | 数据与权限 | 9 类资源、领域/声明/用户授权交集、所有者过滤、本地事务草稿 | 本地信任的 Manifest 和固定用户；无第三方签名、撤销或生产认证 |
@@ -150,8 +158,8 @@ python -m unittest discover -s tests -v
 
 ## Roadmap
 
-- 接入可选真实 LLM 生产者，检验陌生需求产生的 Manifest 是否正确，并记录人工修改成本。
-- 接入真实端侧小模型，测量未见插件的意图结构化、检索、填参与跨域组合能力。
+- 扩大真实云端生成与动态教学实验，报告失败样本、人工验收成本和离线新表述的成功率。
+- 在 M1 8GB 上实测 MLX 模型，记录冷启动、内存、延迟和契约拒绝；建立更多领域的本地模型基线。
 - 研究复杂组合、来源认证、兼容版本、缓存/自动编译与真实业务执行边界。
 - **领域 LoRA / Adapter 热插拔**：作为后续明确研究方向，增强专业意图解析、Query Rewrite、能力召回/重排与专业知识检索。采用领域级适配，研究加载前路由、多领域协调、基座兼容和手机内存/延迟；不做每插件一个执行模型，不替代 Registry 或权限层，不是首版训练依赖。
 
@@ -161,12 +169,13 @@ python -m unittest discover -s tests -v
 
 ```text
 docs/THESIS.md        思想纲领：历史限制、产业情景与反例
+docs/model-expansion.md  真实模型配置、动态能力流程与实测边界
 ARCHITECTURE.md       架构图、事实绑定、执行与权限边界
 RFC/                 可检验提案和复现实验
 specs/               插件/意图 JSON Schema、可信资源策略
 examples/            外卖与资产虚构数据、四插件和扩展版本
 src/splice/          Harness、Registry、Adapter、Planner/Runtime、Gateway、CLI
-tests/test_demo.py   三条演示及关键边界验证
+tests/               演示、模型边界、动态教学与候选发布验证
 ```
 
 GitHub 仓库：[Nana7mi77/splice](https://github.com/Nana7mi77/splice)。欢迎通过 Issue 提出可复现问题，通过 Pull Request 提交改进；开发时使用可编辑安装，提交前运行 `python -m unittest discover -s tests -v`，并同步相关契约与文档。
@@ -179,6 +188,6 @@ GitHub 仓库：[Nana7mi77/splice](https://github.com/Nana7mi77/splice)。欢迎
 
 Splice explores a cloud-produced, on-device-intent, data-driven-plugin architecture. A cloud-side harness produces versioned capabilities; an on-device agent interface expresses goals and constraints; a governed runtime discovers and composes capabilities through data contracts. The aim is to remove the need to hand-author a dedicated intermediate business service for each workflow. Underlying services, data resources, authorization, and state constraints remain necessary.
 
-This repository is an architectural proposal with an offline Python prototype. Both model interfaces are explicitly mocked. Service access and composition are simulated through a local runtime and fictional data; real remote underlying services are not connected. Four declarative plugins connect food delivery with personal asset management: total price including delivery flows into a budget and cash assessment, and an authorized local draft is created only when the intent's conditions pass. Investment valuations are distinct from spendable cash. No real ordering, payment, account access, or trading occurs.
+Version 0.2.0 is an architectural proposal with a Python prototype. Default demos remain offline and explicitly mocked. Optional adapters now use DeepSeek to generate declarative capabilities and a real local model to compile intent against current contracts and learning packs. The first generated teaching pack was revoked after review; one repair produced a budget-reserve guard and teaching pack that passed ten independent fixture cases and three teaching-label checks. The actual local-model results and remaining hardware gaps are recorded in [the experiment guide](docs/model-expansion.md). A fresh offline Qwen3 CPU process also handled a new 15 CNY reserve request, producing a 24 CNY draft with 16 CNY left and zero cloud calls. Learning uses dynamic context, without updating model weights. Experiment-backed runs enforce their declared gates; semantic completeness for unrestricted requests remains unproven. Service access still uses fictional local data; real remote business services are not connected. Four baseline plugins connect food delivery with personal asset management, and an authorized local draft is created only when the intent's conditions pass. Investment valuations are distinct from spendable cash. No real ordering, payment, account access, or trading occurs.
 
 Run `splice demo combined` after `pip install -e .`. The prototype demonstrates bounded contract discovery and composition, not autonomous software production, general natural-language understanding, or a proven economic transition. Domain LoRA / Adapter hot-swapping remains a future research direction for intent parsing and capability search, not a runtime prerequisite.

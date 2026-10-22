@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://splice.example/specs/intent.schema.json",
   "title": "Splice v0.1 Structured Intent",
-  "description": "端侧 Mock 适配器输出语义事实与目标，插件绑定由 Registry 与通用 Planner 完成。",
+  "description": "端侧 Mock 或真实本地适配器输出语义事实与目标，插件绑定由 Registry 与通用 Planner 完成。",
   "type": "object",
   "properties": {
     "goal": {
@@ -80,7 +80,7 @@
       "minLength": 1
     },
     "adapter": {
-      "const": "mock"
+      "enum": ["mock", "local"]
     }
   },
   "required": [

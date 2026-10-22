@@ -10,3 +10,9 @@ dist/
 .pytest_cache/
 .env
 .env.*
+credentials.json
+settings.json
+*私密*
+*.safetensors
+models/
+*.gguf

@@ -1,0 +1,333 @@
+{
+  "manifest": {
+    "id": "finance.budget.reserve_check",
+    "version": "0.1.0",
+    "domain": "finance",
+    "description": "只读校验计划餐饮消费后是否能保留用户指定的最低剩余预算，仅输出布尔判断，不读取或修改原始账户数据。",
+    "examples": [
+      "帮我找一份清淡盖饭，含配送费不超过30元，检查本月餐饮预算和可用现金，只生成订单草稿，不真正下单或支付；吃完这顿饭后，这个月至少还要剩20元餐饮预算。",
+      "本月餐饮预算还够吗？如果这顿花15元，还要剩至少20元。",
+      "先看看我本月餐饮预算，消费50元后至少保留20元。"
+    ],
+    "capability": "finance.budget.reserve_check",
+    "permissions": [
+      "finance_budget:read"
+    ],
+    "resources": [
+      "monthly_budgets"
+    ],
+    "preconditions": [],
+    "effects": [],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "assessment": {
+          "type": "object",
+          "properties": {
+            "month": {
+              "type": "string"
+            },
+            "budget_limit_cny": {
+              "type": "number",
+              "minimum": 0
+            },
+            "spent_cny": {
+              "type": "number",
+              "minimum": 0
+            },
+            "remaining_cny": {
+              "type": "number"
+            },
+            "planned_amount_cny": {
+              "type": "number",
+              "minimum": 0
+            },
+            "projected_remaining_cny": {
+              "type": "number"
+            },
+            "cash_available_cny": {
+              "type": "number",
+              "minimum": 0
+            },
+            "projected_cash_cny": {
+              "type": "number"
+            },
+            "within_budget": {
+              "type": "boolean"
+            },
+            "within_cash": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "month",
+            "budget_limit_cny",
+            "spent_cny",
+            "remaining_cny",
+            "planned_amount_cny",
+            "projected_remaining_cny",
+            "cash_available_cny",
+            "projected_cash_cny",
+            "within_budget",
+            "within_cash"
+          ],
+          "additionalProperties": false,
+          "x-fact": "budget.assessment"
+        },
+        "min_remaining_cny": {
+          "type": "number",
+          "minimum": 0,
+          "description": "用户要求本次消费后至少保留的餐饮预算，人民币元",
+          "x-fact": "budget.min_remaining_cny"
+        }
+      },
+      "required": [
+        "assessment",
+        "min_remaining_cny"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "reserve_preserved": {
+          "type": "boolean",
+          "x-fact": "budget.reserve_preserved"
+        }
+      },
+      "required": [
+        "reserve_preserved"
+      ],
+      "additionalProperties": false
+    },
+    "execution": {
+      "steps": [
+        {
+          "op": "compare",
+          "as": "reserve_ok",
+          "value": {
+            "op": "gte",
+            "args": [
+              "$input.assessment.projected_remaining_cny",
+              "$input.min_remaining_cny"
+            ]
+          }
+        }
+      ],
+      "output": {
+        "reserve_preserved": "$reserve_ok"
+      }
+    }
+  },
+  "rationale": "现有 finance.budget.evaluate 只提供 budget.within_limits，即预算与现金是否足够，并不检查用户要求的『消费后至少保留多少餐饮预算』这一额外底线。该要求需要新的布尔事实 budget.reserve_preserved 来补充原有 gate，而不削弱它们。新能力只消费已有的预算评估事实 budget.assessment 和显式用户参数 budget.min_remaining_cny，声明只读权限 finance_budget:read 与资源 monthly_budgets，不新增写入效果或原始账户读取。协议不允许生成应用级编排处理器或任意代码，因此仅输出布尔比较结果，由通用 Planner 要求 budget.within_limits 与 budget.reserve_preserved 同时为 true。",
+  "learning_pack": {
+    "schema_version": "1.0",
+    "plugin_id": "finance.budget.reserve_check",
+    "plugin_version": "0.1.0",
+    "manifest_sha256": "7697f9fc3f05f52ddeabfc23fd02a7fe3591edda3b5877bcbff074f5e756c5fc",
+    "domain": "finance",
+    "description": "只读校验计划餐饮消费后是否能保留用户指定的最低剩余预算，仅输出布尔判断，不读取或修改原始账户数据。",
+    "keywords": [
+      "餐饮预算",
+      "剩余预算",
+      "最低保留",
+      "预算底线",
+      "只读校验",
+      "订单草稿前置检查"
+    ],
+    "examples": [
+      {
+        "utterance": "本月餐饮预算还够吗？如果这顿花15元，还要剩至少20元。",
+        "intent": {
+          "goal": "检查本月餐饮预算在本顿花费15元后是否仍至少保留20元",
+          "requested_outputs": [
+            "budget.reserve_preserved",
+            "budget.assessment"
+          ],
+          "facts": {
+            "budget.month": "2025-06",
+            "spending.amount_cny": 15,
+            "budget.min_remaining_cny": 20
+          },
+          "gates": [
+            {
+              "fact": "budget.within_limits",
+              "equals": true
+            },
+            {
+              "fact": "budget.reserve_preserved",
+              "equals": true
+            }
+          ],
+          "requires_confirmation": false,
+          "authorized_effects": [],
+          "constraints": {
+            "place_order": false,
+            "make_payment": false
+          },
+          "language": "zh-CN",
+          "utterance": "本月餐饮预算还够吗？如果这顿花15元，还要剩至少20元。",
+          "adapter": "local"
+        }
+      },
+      {
+        "utterance": "先看看我本月餐饮预算，消费50元后至少保留20元。",
+        "intent": {
+          "goal": "检查本月餐饮预算在消费50元后是否仍至少保留20元",
+          "requested_outputs": [
+            "budget.reserve_preserved",
+            "budget.assessment"
+          ],
+          "facts": {
+            "budget.month": "2025-07",
+            "spending.amount_cny": 50,
+            "budget.min_remaining_cny": 20
+          },
+          "gates": [
+            {
+              "fact": "budget.within_limits",
+              "equals": true
+            },
+            {
+              "fact": "budget.reserve_preserved",
+              "equals": true
+            }
+          ],
+          "requires_confirmation": false,
+          "authorized_effects": [],
+          "constraints": {
+            "place_order": false,
+            "make_payment": false
+          },
+          "language": "zh-CN",
+          "utterance": "先看看我本月餐饮预算，消费50元后至少保留20元。",
+          "adapter": "local"
+        }
+      },
+      {
+        "utterance": "晚餐想点份清淡盖饭，总价预算15元，吃完后这个月餐饮预算至少剩20元；先只生成草稿，别下单。",
+        "intent": {
+          "goal": "为一份清淡盖饭生成订单草稿，同时确认消费15元后本月餐饮预算仍至少保留20元",
+          "requested_outputs": [
+            "meal.candidates",
+            "meal.selected_id",
+            "budget.reserve_preserved",
+            "budget.assessment"
+          ],
+          "facts": {
+            "meal.query": "盖饭",
+            "meal.taste": "清淡",
+            "spending.max_cny": 15,
+            "budget.month": "2025-06",
+            "spending.amount_cny": 15,
+            "budget.min_remaining_cny": 20
+          },
+          "gates": [
+            {
+              "fact": "budget.within_limits",
+              "equals": true
+            },
+            {
+              "fact": "budget.reserve_preserved",
+              "equals": true
+            }
+          ],
+          "requires_confirmation": true,
+          "authorized_effects": [],
+          "constraints": {
+            "place_order": false,
+            "make_payment": false
+          },
+          "language": "zh-CN",
+          "utterance": "晚餐想点份清淡盖饭，总价预算15元，吃完后这个月餐饮预算至少剩20元；先只生成草稿，别下单。",
+          "adapter": "local"
+        }
+      }
+    ],
+    "negative_examples": [
+      {
+        "utterance": "直接帮我把这份盖饭下单并支付。",
+        "reason": "该请求要求真实下单与支付，超出只读预算校验和订单草稿的能力范围；系统仅允许生成草稿，禁止真实交易。"
+      },
+      {
+        "utterance": "告诉我我的现金账户余额和所有持仓明细。",
+        "reason": "请求访问原始现金账户和持仓明细，属于隐私金融数据，且超出预算底线校验所需的最小事实范围。"
+      }
+    ],
+    "fact_dependencies": {
+      "budget.reserve_preserved": [
+        "budget.assessment",
+        "budget.min_remaining_cny"
+      ]
+    },
+    "required_permissions": [
+      "finance_budget:read"
+    ],
+    "supported_manifest_versions": [
+      "0.1.0"
+    ],
+    "adaptation_mode": "dynamic_context"
+  },
+  "behavior_examples": [
+    {
+      "input": {
+        "assessment": {
+          "month": "2025-06",
+          "budget_limit_cny": 1500,
+          "spent_cny": 1000,
+          "remaining_cny": 500,
+          "planned_amount_cny": 30,
+          "projected_remaining_cny": 470,
+          "cash_available_cny": 800,
+          "projected_cash_cny": 770,
+          "within_budget": true,
+          "within_cash": true
+        },
+        "min_remaining_cny": 20
+      },
+      "expected_output": {
+        "reserve_preserved": true
+      }
+    },
+    {
+      "input": {
+        "assessment": {
+          "month": "2025-06",
+          "budget_limit_cny": 1500,
+          "spent_cny": 1480,
+          "remaining_cny": 20,
+          "planned_amount_cny": 15,
+          "projected_remaining_cny": 5,
+          "cash_available_cny": 800,
+          "projected_cash_cny": 785,
+          "within_budget": true,
+          "within_cash": true
+        },
+        "min_remaining_cny": 20
+      },
+      "expected_output": {
+        "reserve_preserved": false
+      }
+    },
+    {
+      "input": {
+        "assessment": {
+          "month": "2025-06",
+          "budget_limit_cny": 1500,
+          "spent_cny": 1000,
+          "remaining_cny": 500,
+          "planned_amount_cny": 50,
+          "projected_remaining_cny": 450,
+          "cash_available_cny": 800,
+          "projected_cash_cny": 750,
+          "within_budget": true,
+          "within_cash": true
+        },
+        "min_remaining_cny": 500
+      },
+      "expected_output": {
+        "reserve_preserved": false
+      }
+    }
+  ]
+}

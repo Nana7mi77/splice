@@ -1,0 +1,120 @@
+{
+  "id": "finance.budget.reserve_check",
+  "version": "0.1.0",
+  "domain": "finance",
+  "description": "只读校验计划餐饮消费后是否能保留用户指定的最低剩余预算，仅输出布尔判断，不读取或修改原始账户数据。",
+  "examples": [
+    "帮我找一份清淡盖饭，含配送费不超过30元，检查本月餐饮预算和可用现金，只生成订单草稿，不真正下单或支付；吃完这顿饭后，这个月至少还要剩15元餐饮预算。",
+    "本月餐饮预算还够吗？这顿最多花30元，吃完后至少保留20元餐饮预算。",
+    "先看看本月餐饮预算，消费50元后至少保留50元餐饮预算，只校验不下单。"
+  ],
+  "capability": "finance.budget.reserve_check",
+  "permissions": [
+    "finance_budget:read"
+  ],
+  "resources": [
+    "monthly_budgets"
+  ],
+  "preconditions": [],
+  "effects": [],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "assessment": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string"
+          },
+          "budget_limit_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "spent_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "remaining_cny": {
+            "type": "number"
+          },
+          "planned_amount_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "projected_remaining_cny": {
+            "type": "number"
+          },
+          "cash_available_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "projected_cash_cny": {
+            "type": "number"
+          },
+          "within_budget": {
+            "type": "boolean"
+          },
+          "within_cash": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "month",
+          "budget_limit_cny",
+          "spent_cny",
+          "remaining_cny",
+          "planned_amount_cny",
+          "projected_remaining_cny",
+          "cash_available_cny",
+          "projected_cash_cny",
+          "within_budget",
+          "within_cash"
+        ],
+        "additionalProperties": false,
+        "x-fact": "budget.assessment"
+      },
+      "min_remaining_cny": {
+        "type": "number",
+        "minimum": 0,
+        "description": "用户要求本次消费后至少保留的餐饮预算，人民币元",
+        "x-fact": "budget.min_remaining_cny"
+      }
+    },
+    "required": [
+      "assessment",
+      "min_remaining_cny"
+    ],
+    "additionalProperties": false
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "reserve_preserved": {
+        "type": "boolean",
+        "x-fact": "budget.reserve_preserved"
+      }
+    },
+    "required": [
+      "reserve_preserved"
+    ],
+    "additionalProperties": false
+  },
+  "execution": {
+    "steps": [
+      {
+        "op": "compare",
+        "as": "reserve_ok",
+        "value": {
+          "op": "gte",
+          "args": [
+            "$input.assessment.projected_remaining_cny",
+            "$input.min_remaining_cny"
+          ]
+        }
+      }
+    ],
+    "output": {
+      "reserve_preserved": "$reserve_ok"
+    }
+  }
+}

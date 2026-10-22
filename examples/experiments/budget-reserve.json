@@ -1,0 +1,278 @@
+{
+  "schema_version": "1.0",
+  "description": "Independent synthetic-fixture acceptance specification; contains expected behavior, no implementation DSL.",
+  "requirement": "帮我找一份清淡盖饭，含配送费不超过30元，检查本月餐饮预算和可用现金，只生成订单草稿，不真正下单或支付；吃完这顿饭后，这个月至少还要剩20元餐饮预算。",
+  "target_contract": {
+    "domain": "finance",
+    "input_facts": {
+      "budget.assessment": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string"
+          },
+          "budget_limit_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "spent_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "remaining_cny": {
+            "type": "number"
+          },
+          "planned_amount_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "projected_remaining_cny": {
+            "type": "number"
+          },
+          "cash_available_cny": {
+            "type": "number",
+            "minimum": 0
+          },
+          "projected_cash_cny": {
+            "type": "number"
+          },
+          "within_budget": {
+            "type": "boolean"
+          },
+          "within_cash": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "month",
+          "budget_limit_cny",
+          "spent_cny",
+          "remaining_cny",
+          "planned_amount_cny",
+          "projected_remaining_cny",
+          "cash_available_cny",
+          "projected_cash_cny",
+          "within_budget",
+          "within_cash"
+        ],
+        "additionalProperties": false,
+        "x-fact": "budget.assessment"
+      },
+      "budget.min_remaining_cny": {
+        "type": "number",
+        "minimum": 0,
+        "description": "用户要求本次消费后至少保留的餐饮预算，人民币元",
+        "x-fact": "budget.min_remaining_cny"
+      }
+    },
+    "output_facts": {
+      "budget.reserve_preserved": {
+        "type": "boolean",
+        "x-fact": "budget.reserve_preserved"
+      }
+    },
+    "allowed_resources": [
+      "monthly_budgets"
+    ],
+    "allowed_permissions": [
+      "finance_budget:read"
+    ],
+    "required_gates": [
+      {
+        "fact": "budget.within_limits",
+        "equals": true
+      },
+      {
+        "fact": "budget.reserve_preserved",
+        "equals": true
+      }
+    ],
+    "teaching_cases": [
+      {
+        "facts": {
+          "meal.query": "盖饭",
+          "meal.taste": "清淡",
+          "spending.max_cny": 30.0,
+          "budget.month": "2026-10",
+          "budget.min_remaining_cny": 15
+        },
+        "requested_outputs": [
+          "order.draft",
+          "budget.assessment"
+        ]
+      },
+      {
+        "facts": {
+          "meal.query": "盖饭",
+          "meal.taste": "清淡",
+          "spending.max_cny": 30.0,
+          "budget.month": "2026-10",
+          "budget.min_remaining_cny": 20
+        },
+        "requested_outputs": [
+          "order.draft",
+          "budget.assessment"
+        ]
+      },
+      {
+        "facts": {
+          "meal.query": "盖饭",
+          "meal.taste": "清淡",
+          "spending.max_cny": 30.0,
+          "budget.month": "2026-10",
+          "budget.min_remaining_cny": 50
+        },
+        "requested_outputs": [
+          "order.draft",
+          "budget.assessment"
+        ]
+      }
+    ],
+    "teaching_notes": "Generate at least one distinct natural-language full food-plus-budget draft request for EACH teaching_case. Use the exact supplied facts, current fictional month 2026-10, cap30 and the varying minimum15/20/50. Include order.draft output; do not supply computed spending.amount_cny, budget.assessment, meal.selected_id or booleans as initial facts. Every utterance must actually express its cap and post-meal reserve. Preserve both guards."
+  },
+  "base_intent": {
+    "goal": "food_with_budget_check",
+    "requested_outputs": [
+      "order.draft",
+      "budget.assessment"
+    ],
+    "facts": {
+      "meal.query": "盖饭",
+      "meal.taste": "清淡",
+      "spending.max_cny": 30.0,
+      "budget.month": "2026-10",
+      "budget.min_remaining_cny": 20
+    },
+    "gates": [
+      {
+        "fact": "budget.within_limits",
+        "equals": true
+      },
+      {
+        "fact": "budget.reserve_preserved",
+        "equals": true
+      }
+    ],
+    "requires_confirmation": true,
+    "authorized_effects": [],
+    "constraints": {
+      "place_order": false,
+      "make_payment": false
+    },
+    "language": "zh-CN",
+    "utterance": "帮我找一份清淡盖饭，含配送费不超过30元，检查本月餐饮预算和可用现金，只生成订单草稿，不真正下单或支付；吃完这顿饭后，这个月至少还要剩20元餐饮预算。",
+    "adapter": "local"
+  },
+  "grants": [
+    "food:read",
+    "food_order_draft:write",
+    "finance_budget:read"
+  ],
+  "cases": [
+    {
+      "name": "reserve_15",
+      "facts": {
+        "budget.min_remaining_cny": 15
+      },
+      "expected_status": "completed",
+      "expected_drafts": 1
+    },
+    {
+      "name": "reserve_20",
+      "facts": {
+        "budget.min_remaining_cny": 20
+      },
+      "expected_status": "blocked",
+      "expected_drafts": 0,
+      "expected_error": "GateRejected"
+    },
+    {
+      "name": "reserve_50",
+      "facts": {
+        "budget.min_remaining_cny": 50
+      },
+      "expected_status": "blocked",
+      "expected_drafts": 0,
+      "expected_error": "GateRejected"
+    },
+    {
+      "name": "reserve_16",
+      "facts": {
+        "budget.min_remaining_cny": 16
+      },
+      "expected_status": "completed",
+      "expected_drafts": 1
+    },
+    {
+      "name": "reserve_16.01",
+      "facts": {
+        "budget.min_remaining_cny": 16.01
+      },
+      "expected_status": "blocked",
+      "expected_drafts": 0,
+      "expected_error": "GateRejected"
+    },
+    {
+      "name": "reserve_0",
+      "facts": {
+        "budget.min_remaining_cny": 0
+      },
+      "expected_status": "completed",
+      "expected_drafts": 1
+    },
+    {
+      "name": "missing_finance_permission",
+      "facts": {
+        "budget.min_remaining_cny": 15
+      },
+      "grants": [
+        "food:read",
+        "food_order_draft:write"
+      ],
+      "expected_status": "blocked",
+      "expected_error": "PermissionDenied",
+      "expected_drafts": 0
+    },
+    {
+      "name": "cash_insufficient",
+      "facts": {
+        "budget.min_remaining_cny": 15
+      },
+      "resource_updates": {
+        "cash_accounts": {
+          "balance_cny": 1
+        }
+      },
+      "expected_status": "blocked",
+      "expected_error": "GateRejected",
+      "expected_drafts": 0
+    },
+    {
+      "name": "larger_budget_same_guard",
+      "facts": {
+        "budget.min_remaining_cny": 50
+      },
+      "resource_updates": {
+        "monthly_budgets": {
+          "limit_cny": 1100
+        }
+      },
+      "expected_status": "completed",
+      "expected_drafts": 1
+    },
+    {
+      "name": "smaller_budget_still_solvent",
+      "facts": {
+        "budget.min_remaining_cny": 15
+      },
+      "resource_updates": {
+        "monthly_budgets": {
+          "limit_cny": 990
+        }
+      },
+      "expected_status": "blocked",
+      "expected_error": "GateRejected",
+      "expected_drafts": 0
+    }
+  ]
+}

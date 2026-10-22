@@ -4,12 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "splice-prototype"
-version = "0.1.0"
+version = "0.2.0"
 description = "Composable service access for agents, without a predefined business service layer"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "Apache-2.0"}
 dependencies = ["jsonschema>=4.18,<5"]
+
+[project.optional-dependencies]
+local = ["mlx-vlm==0.3.12; sys_platform == 'darwin'", "mlx-lm>=0.30.7,<0.31; sys_platform == 'darwin'", "transformers>=5.1,<5.2; sys_platform == 'darwin'", "huggingface-hub>=0.30"]
+local-cpu = ["torch>=2.6,<3", "transformers>=4.51,<5", "huggingface-hub>=0.30,<1"]
 
 [project.scripts]
 splice = "splice.cli:main"
@@ -23,3 +27,4 @@ where = ["src"]
 "share/splice/examples/finance" = ["examples/finance/*.json"]
 "share/splice/examples/plugins" = ["examples/plugins/*.json"]
 "share/splice/examples/extensions" = ["examples/extensions/*.json"]
+"share/splice/examples/experiments" = ["examples/experiments/*.json"]

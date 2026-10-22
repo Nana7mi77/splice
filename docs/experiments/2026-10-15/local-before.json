@@ -1,0 +1,213 @@
+{
+  "combined": {
+    "ok": false,
+    "error": "真实本地模型推理或意图契约验证失败",
+    "report": {
+      "status": "failed",
+      "adapter": "local",
+      "utterance": "今晚想吃一份30元以内的盖饭，但不能超过这个月的餐饮预算。先检查我还剩多少钱，合适才生成订单草稿，顺便告诉我买完以后餐饮预算和可用现金还剩多少。",
+      "adaptation_mode": "dynamic_context",
+      "weights_updated": false,
+      "learning_pack_versions": [],
+      "registry_versions": [
+        {
+          "id": "finance.assets.summary",
+          "version": "0.1.0"
+        },
+        {
+          "id": "finance.budget.evaluate",
+          "version": "0.1.0"
+        },
+        {
+          "id": "food.menu.search",
+          "version": "0.1.0"
+        },
+        {
+          "id": "food.order.draft",
+          "version": "0.1.0"
+        }
+      ],
+      "model": "Qwen/Qwen3-1.7B",
+      "backend": "transformers",
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "latency_seconds": 305.963,
+      "peak_memory_bytes": 4463603712,
+      "prompt_tokens": 2331,
+      "generated_tokens": 413,
+      "offline": true,
+      "local_model": "Qwen/Qwen3-1.7B",
+      "model_output": "{\n  \"intent\": {\n    \"goal\": \"今晚想吃一份30元以内的盖饭，但不能超过这个月的餐饮预算\",\n    \"requested_outputs\": [\n      \"买完以后餐饮预算和可用现金还剩多少\"\n    ],\n    \"facts\": {\n      \"budget.month\": \"2026-10\",\n      \"meal.query\": \"盖饭\",\n      \"meal.taste\": \"清淡\",\n      \"spending.max_cny\": 30,\n      \"spending.amount_cny\": 0\n    },\n    \"gates\": [\n      {\n        \"fact\": \"budget.month\",\n        \"equals\": \"2026-10\"\n      },\n      {\n        \"fact\": \"meal.query\",\n        \"equals\": \"盖饭\"\n      },\n      {\n        \"fact\": \"meal.taste\",\n        \"equals\": \"清淡\"\n      },\n      {\n        \"fact\": \"spending.max_cny\",\n        \"equals\": 30\n      },\n      {\n        \"fact\": \"spending.amount_cny\",\n        \"equals\": 0\n      }\n    ],\n    \"requires_confirmation\": true,\n    \"authorized_effects\": [\n      \"draft.create\"\n    ],\n    \"constraints\": {\n      \"place_order\": false,\n      \"make_payment\": false\n    },\n    \"language\": \"zh-CN\",\n    \"utterance\": \"今晚想吃一份30元以内的盖饭，但不能超过这个月的餐饮预算。先检查我还剩多少钱，合适才生成订单草稿，顺便告诉我买完以后餐饮预算和可用现金还剩多少。\",\n    \"adapter\": \"local\"\n  },\n  \"unresolved_constraints\": [\n    {\n      \"text\": \"spending.amount_cny\",\n      \"reason\": \"当前契约不能表达或能力缺失原因\",\n      \"suggested_fact\": \"spending.amount_cny\",\n      \"schema\": {\n        \"type\": \"number\"\n      }\n    }\n  ]\n}",
+      "model_intent": {
+        "goal": "今晚想吃一份30元以内的盖饭，但不能超过这个月的餐饮预算",
+        "requested_outputs": [
+          "买完以后餐饮预算和可用现金还剩多少"
+        ],
+        "facts": {
+          "budget.month": "2026-10",
+          "meal.query": "盖饭",
+          "meal.taste": "清淡",
+          "spending.max_cny": 30,
+          "spending.amount_cny": 0
+        },
+        "gates": [
+          {
+            "fact": "budget.month",
+            "equals": "2026-10"
+          },
+          {
+            "fact": "meal.query",
+            "equals": "盖饭"
+          },
+          {
+            "fact": "meal.taste",
+            "equals": "清淡"
+          },
+          {
+            "fact": "spending.max_cny",
+            "equals": 30
+          },
+          {
+            "fact": "spending.amount_cny",
+            "equals": 0
+          }
+        ],
+        "requires_confirmation": true,
+        "authorized_effects": [
+          "draft.create"
+        ],
+        "constraints": {
+          "place_order": false,
+          "make_payment": false
+        },
+        "language": "zh-CN",
+        "utterance": "今晚想吃一份30元以内的盖饭，但不能超过这个月的餐饮预算。先检查我还剩多少钱，合适才生成订单草稿，顺便告诉我买完以后餐饮预算和可用现金还剩多少。",
+        "adapter": "local"
+      },
+      "reason": "local_inference_or_contract_error",
+      "error": "intent at requested_outputs.0: '买完以后餐饮预算和可用现金还剩多少' does not match '^[a-z][a-z0-9_]*(\\\\.[a-z][a-z0-9_]*)+$'"
+    }
+  },
+  "unknown": {
+    "ok": false,
+    "error": "真实本地模型推理或意图契约验证失败",
+    "report": {
+      "status": "failed",
+      "adapter": "local",
+      "utterance": "帮我找一份清淡盖饭，含配送费不超过30元，结合资产、现金和月度预算，只生成订单草稿，不真实下单和支付；吃完这顿饭后，这个月至少还要剩20元预算。",
+      "adaptation_mode": "dynamic_context",
+      "weights_updated": false,
+      "learning_pack_versions": [],
+      "registry_versions": [
+        {
+          "id": "finance.assets.summary",
+          "version": "0.1.0"
+        },
+        {
+          "id": "finance.budget.evaluate",
+          "version": "0.1.0"
+        },
+        {
+          "id": "food.menu.search",
+          "version": "0.1.0"
+        },
+        {
+          "id": "food.order.draft",
+          "version": "0.1.0"
+        }
+      ],
+      "model": "Qwen/Qwen3-1.7B",
+      "backend": "transformers",
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "latency_seconds": 159.417,
+      "peak_memory_bytes": 4589596672,
+      "prompt_tokens": 2335,
+      "generated_tokens": 145,
+      "offline": true,
+      "local_model": "Qwen/Qwen3-1.7B",
+      "model_output": "{\n  \"intent\": {\n    \"goal\": \"帮我找一份清淡盖饭，含配送费不超过30元，结合资产、现金和月度预算，只生成订单草稿，不真实下单和支付；吃完这顿饭后，这个月至少还要剩20元预算。\",\n    \"requested_outputs\": [\"order.draft\", \"spending.amount_cny\"]\n  },\n  \"unresolved_constraints\": [\n    {\n      \"text\": \"用户原文片段\",\n      \"reason\": \"当前契约不能表达或能力缺失原因\",\n      \"suggested_fact\": \"meal.candidates\",\n      \"schema\": {\n        \"type\": \"number\"\n      }\n    }\n  ]\n}",
+      "model_intent": {
+        "goal": "帮我找一份清淡盖饭，含配送费不超过30元，结合资产、现金和月度预算，只生成订单草稿，不真实下单和支付；吃完这顿饭后，这个月至少还要剩20元预算。",
+        "requested_outputs": [
+          "order.draft",
+          "spending.amount_cny"
+        ]
+      },
+      "reason": "local_inference_or_contract_error",
+      "error": "intent at $: 'facts' is a required property"
+    }
+  },
+  "food": {
+    "ok": false,
+    "error": "真实本地模型推理或意图契约验证失败",
+    "report": {
+      "status": "failed",
+      "adapter": "local",
+      "utterance": "帮我找今晚30元以内的盖饭，算上配送费，口味清淡，先生成订单草稿，不要真正下单。",
+      "adaptation_mode": "dynamic_context",
+      "weights_updated": false,
+      "learning_pack_versions": [],
+      "registry_versions": [
+        {
+          "id": "finance.assets.summary",
+          "version": "0.1.0"
+        },
+        {
+          "id": "finance.budget.evaluate",
+          "version": "0.1.0"
+        },
+        {
+          "id": "food.menu.search",
+          "version": "0.1.0"
+        },
+        {
+          "id": "food.order.draft",
+          "version": "0.1.0"
+        }
+      ],
+      "model": "Qwen/Qwen3-1.7B",
+      "backend": "transformers",
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "latency_seconds": 223.04,
+      "peak_memory_bytes": 4589596672,
+      "prompt_tokens": 2312,
+      "generated_tokens": 274,
+      "offline": true,
+      "local_model": "Qwen/Qwen3-1.7B",
+      "model_output": "{\n  \"intent\": {\n    \"goal\": \"帮我找今晚30元以内的盖饭，算上配送费，口味清淡，先生成订单草稿，不要真正下单。\",\n    \"requested_outputs\": [\"meal.candidates\", \"order.draft\", \"spending.amount_cny\"],\n    \"facts\": {\n      \"budget.month\": \"2026-10\",\n      \"meal.query\": \"盖饭\",\n      \"meal.taste\": \"清淡\",\n      \"spending.max_cny\": 30\n    },\n    \"gates\": [\n      {\n        \"fact\": \"budget.month\",\n        \"equals\": \"2026-10\"\n      },\n      {\n        \"fact\": \"meal.query\",\n        \"equals\": \"盖饭\"\n      },\n      {\n        \"fact\": \"meal.taste\",\n        \"equals\": \"清淡\"\n      },\n      {\n        \"fact\": \"spending.max_cny\",\n        \"equals\": 30\n      }\n    ]\n  },\n  \"unresolved_constraints\": [\n    {\n      \"text\": \"用户原文片段\",\n      \"reason\": \"当前契约不能表达或能力缺失原因\",\n      \"suggested_fact\": \"meal.selected_id\",\n      \"schema\": {\n        \"type\": \"number\"\n      }\n    }\n  ]\n}",
+      "model_intent": {
+        "goal": "帮我找今晚30元以内的盖饭，算上配送费，口味清淡，先生成订单草稿，不要真正下单。",
+        "requested_outputs": [
+          "meal.candidates",
+          "order.draft",
+          "spending.amount_cny"
+        ],
+        "facts": {
+          "budget.month": "2026-10",
+          "meal.query": "盖饭",
+          "meal.taste": "清淡",
+          "spending.max_cny": 30
+        },
+        "gates": [
+          {
+            "fact": "budget.month",
+            "equals": "2026-10"
+          },
+          {
+            "fact": "meal.query",
+            "equals": "盖饭"
+          },
+          {
+            "fact": "meal.taste",
+            "equals": "清淡"
+          },
+          {
+            "fact": "spending.max_cny",
+            "equals": 30
+          }
+        ]
+      },
+      "reason": "local_inference_or_contract_error",
+      "error": "intent at $: 'requires_confirmation' is a required property"
+    }
+  }
+}
