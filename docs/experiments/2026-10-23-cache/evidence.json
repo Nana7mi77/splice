@@ -1,0 +1,48 @@
+{
+  "report_verified_date_utc": "2026-10-24",
+  "experiment_date_utc": "2026-10-23",
+  "git_base": "ba1bef39bd92cd834a7c5285f51dffb9fb5320b0",
+  "production_src_unchanged": true,
+  "cloud_calls": [],
+  "files_sha256": {
+    "experiments/cache_benchmark/prefix_cache.py": "f35f3fe3d324f57d6e522a1257ccacaac658e9457dc189de4f95133e133e736a",
+    "experiments/cache_benchmark/recheck.py": "a74048a210746cd344dd0d9e38e75b4a2566eb54d557828fbbf55235e492a81b",
+    "experiments/cache_benchmark/run.py": "c3e1b7fdfdd580f012cae9a0915dc507fc08a0e241fc829960f26e5cd6377df2",
+    "experiments/cache_benchmark/summarize.py": "b6b8ff104f6d90649422007e5f3ad4933a6240a5f98bfaf1d29933e520cb717e",
+    "experiments/cache_benchmark/test_prefix_cache.py": "a6788ec83784f752313683b62afac841b6c0502f8f92a19296d396cb58224780",
+    "experiments/cache_benchmark/README.md": "b216a195ab95fe1928ab49c8ecf13d9e1580a3c8f0dae9d5bcfd99d4e511e69a",
+    "docs/experiments/2026-10-23-cache/results.json": "6c7c6e117c46326d57aad37458c3b5eecf385feb57348a8c5840a7827dc5b2bf",
+    "docs/experiments/2026-10-23-cache/summary.json": "bedd77887a3d081824282c4f83260c93b6d2703c68b70565b3bd41b96c5f2876"
+  },
+  "validation": [
+    {
+      "command": "HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 .venv/bin/python -m unittest experiments.cache_benchmark.test_prefix_cache -v",
+      "passed": 5,
+      "failed": 0,
+      "test_body_seconds": 0.079,
+      "kind": "tiny random Qwen3 API and isolation checks; not performance evidence"
+    },
+    {
+      "command": ".venv/bin/python -m unittest discover -s tests -v",
+      "passed": 54,
+      "failed": 0,
+      "test_body_seconds": 69.178,
+      "kind": "existing offline regression suite"
+    },
+    {
+      "command": ".venv/bin/python -m experiments.cache_benchmark.summarize docs/experiments/2026-10-23-cache/results.json --output docs/experiments/2026-10-23-cache/summary.json",
+      "status": "passed",
+      "real_generation_runs": 12,
+      "exact_token_pairs": 6,
+      "full_generation_runs": 4,
+      "runtime_checks": 12
+    }
+  ],
+  "measurement_notes": [
+    "Measurements completed in the October 23 environment; October 24 only summarized and validated saved evidence.",
+    "Initial preflight aborted before sampling: re-rendered truncated Qwen3 conversation was not an exact prefix. Final code extracts actual rendered prefix and asserts exact token equality.",
+    "Both groups use the same resident model and intra-request KV; only the hit path reuses cross-request prefix KV.",
+    "Integrated cache-miss response was not timed. First response and break-even totals are component-based estimates.",
+    "Original results file was copied byte-for-byte; summary generated locally without new inference."
+  ]
+}

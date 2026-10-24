@@ -1,0 +1,1004 @@
+{
+  "status": "passed",
+  "source_status": "completed",
+  "scope": "Resident CPU model; cross-request prefix KV reuse only; not production CLI timing",
+  "cloud_calls": [],
+  "model": "Qwen/Qwen3-1.7B",
+  "identity": {
+    "model_revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+    "tokenizer_revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+    "chat_template": "41d5929bf73796beb66809ac700b2cf3ff81694f933e5c14d52b7fd6963c947d",
+    "backend": "transformers-cpu",
+    "dtype": "torch.bfloat16",
+    "catalog_hash": "22ebf8825cbc3a705af0e93b3fd7321016fc32b0531783f1f7fc3df451de2eb9",
+    "learning_hash": "1543aa7fe60d999ccc52536d5f9469537e097f2ed91424f9f76f12e5f5784093",
+    "attention_implementation": "sdpa",
+    "transformers": "4.57.6",
+    "torch": "2.14.1+cpu",
+    "default_month": "2026-10",
+    "enable_thinking": false
+  },
+  "environment": {
+    "cpu_count": 3,
+    "affinity": [
+      0,
+      1,
+      2
+    ],
+    "cpu_quota": "200000 100000",
+    "memory_limit_bytes": "8589934592",
+    "threads": 2,
+    "interop_threads": 1
+  },
+  "startup": {
+    "imports_seconds": 3.8785039829999732,
+    "tokenizer_load_seconds": 0.3583677040001021,
+    "model_load_seconds": 0.14601669699982267,
+    "rss_after_load_bytes": 542466048
+  },
+  "warmup_seconds": 1.3230390649998753,
+  "sample_scope": "Four 16-token paired trials; two complete-request pairs. Descriptive, not a significance or production-hit-rate estimate.",
+  "missing_runs": [],
+  "duplicate_run_keys": false,
+  "requests": {
+    "15": {
+      "prompt_tokens": 1844,
+      "prefix_tokens": 1781,
+      "suffix_tokens": 63
+    },
+    "20": {
+      "prompt_tokens": 1844,
+      "prefix_tokens": 1781,
+      "suffix_tokens": 63
+    },
+    "50": {
+      "prompt_tokens": 1844,
+      "prefix_tokens": 1781,
+      "suffix_tokens": 63
+    },
+    "16": {
+      "prompt_tokens": 1844,
+      "prefix_tokens": 1781,
+      "suffix_tokens": 63
+    }
+  },
+  "cache_initialization": {
+    "key": "5f1d0cd74784451fbd3400bc44efc1357bd6bed8c18e7047fc2dde8c64233ad8",
+    "identity_hash": "4ad49846a9750e684d45409893795cb86d8d51acbe0505c76510cc5a3cf8bbe5",
+    "hit": false,
+    "prefix_tokens": 1781,
+    "build_seconds": 48.87357706700004,
+    "clone_seconds": 0.07889812400003393,
+    "cache_bytes": 204259328,
+    "retained_entries": 1,
+    "evicted_key": null,
+    "lookup_build_clone_seconds": 48.95312344900003,
+    "rss_with_template_and_clone_bytes": 4452098048,
+    "rss_after_discarding_initial_clone_bytes": 4299030528
+  },
+  "short_pairs": [
+    {
+      "reserve": 15,
+      "baseline": {
+        "name": "short_1_no_prefix_reuse",
+        "reserve": 15,
+        "mode": "no_prefix_reuse",
+        "elapsed_seconds": 58.046775700000126,
+        "first_token_seconds": 52.08562646300015,
+        "generated_tokens": 16,
+        "first_forward_seconds": 52.07918790000008,
+        "first_forward_input_tokens": 1844,
+        "decode_forward_seconds": 5.904645380000147,
+        "decode_forward_count": 15,
+        "mean_decode_forward_seconds": 0.39364302533334317,
+        "ended_with_eos": false
+      },
+      "hit": {
+        "name": "short_1_prefix_hit",
+        "reserve": 15,
+        "mode": "prefix_hit",
+        "elapsed_seconds": 5.964999410999781,
+        "first_token_seconds": 1.7042970919999334,
+        "generated_tokens": 16,
+        "first_forward_seconds": 1.6663436339999862,
+        "first_forward_input_tokens": 63,
+        "decode_forward_seconds": 4.219376148999572,
+        "decode_forward_count": 15,
+        "mean_decode_forward_seconds": 0.28129174326663814,
+        "ended_with_eos": false,
+        "clone_seconds": 0.03354422799998247
+      },
+      "exact_token_match": true,
+      "first_differing_token_index": null,
+      "same_generated_length": true,
+      "elapsed_seconds_saved": 52.081776289000345,
+      "elapsed_reduction_fraction": 0.8972380577720914,
+      "elapsed_speedup_ratio": 9.731229074886201,
+      "first_token_seconds_saved": 50.38132937100022,
+      "first_token_reduction_fraction": 0.9672789364795179,
+      "first_token_speedup_ratio": 30.561353831730994
+    },
+    {
+      "reserve": 20,
+      "baseline": {
+        "name": "short_2_no_prefix_reuse",
+        "reserve": 20,
+        "mode": "no_prefix_reuse",
+        "elapsed_seconds": 51.068608927000014,
+        "first_token_seconds": 46.72931973999994,
+        "generated_tokens": 16,
+        "first_forward_seconds": 46.72355150899989,
+        "first_forward_input_tokens": 1844,
+        "decode_forward_seconds": 4.295986016999905,
+        "decode_forward_count": 15,
+        "mean_decode_forward_seconds": 0.28639906779999363,
+        "ended_with_eos": false
+      },
+      "hit": {
+        "name": "short_2_prefix_hit",
+        "reserve": 20,
+        "mode": "prefix_hit",
+        "elapsed_seconds": 7.739089212999943,
+        "first_token_seconds": 1.7264377819999481,
+        "generated_tokens": 16,
+        "first_forward_seconds": 1.6930053189998944,
+        "first_forward_input_tokens": 63,
+        "decode_forward_seconds": 5.964262114000121,
+        "decode_forward_count": 15,
+        "mean_decode_forward_seconds": 0.39761747426667476,
+        "ended_with_eos": false,
+        "clone_seconds": 0.03005387400003201
+      },
+      "exact_token_match": true,
+      "first_differing_token_index": null,
+      "same_generated_length": true,
+      "elapsed_seconds_saved": 43.32951971400007,
+      "elapsed_reduction_fraction": 0.8484570193783313,
+      "elapsed_speedup_ratio": 6.598787986733135,
+      "first_token_seconds_saved": 45.00288195799999,
+      "first_token_reduction_fraction": 0.9630545064296725,
+      "first_token_speedup_ratio": 27.06690054353858
+    },
+    {
+      "reserve": 50,
+      "baseline": {
+        "name": "short_3_no_prefix_reuse",
+        "reserve": 50,
+        "mode": "no_prefix_reuse",
+        "elapsed_seconds": 48.18020064799998,
+        "first_token_seconds": 43.944183104999865,
+        "generated_tokens": 16,
+        "first_forward_seconds": 43.938145265,
+        "first_forward_input_tokens": 1844,
+        "decode_forward_seconds": 4.186872257999994,
+        "decode_forward_count": 15,
+        "mean_decode_forward_seconds": 0.2791248171999996,
+        "ended_with_eos": false
+      },
+      "hit": {
+        "name": "short_3_prefix_hit",
+        "reserve": 50,
+        "mode": "prefix_hit",
+        "elapsed_seconds": 7.0912909520000085,
+        "first_token_seconds": 1.7197221219998937,
+        "generated_tokens": 16,
+        "first_forward_seconds": 1.6519009659998574,
+        "first_forward_input_tokens": 63,
+        "decode_forward_seconds": 5.318158909999283,
+        "decode_forward_count": 15,
+        "mean_decode_forward_seconds": 0.35454392733328555,
+        "ended_with_eos": false,
+        "clone_seconds": 0.06266016899985516
+      },
+      "exact_token_match": true,
+      "first_differing_token_index": null,
+      "same_generated_length": true,
+      "elapsed_seconds_saved": 41.08890969599997,
+      "elapsed_reduction_fraction": 0.852817322123494,
+      "elapsed_speedup_ratio": 6.794277794286718,
+      "first_token_seconds_saved": 42.22446098299997,
+      "first_token_reduction_fraction": 0.9608657619623784,
+      "first_token_speedup_ratio": 25.553071942748772
+    },
+    {
+      "reserve": 16,
+      "baseline": {
+        "name": "short_4_no_prefix_reuse",
+        "reserve": 16,
+        "mode": "no_prefix_reuse",
+        "elapsed_seconds": 58.24986693899996,
+        "first_token_seconds": 51.824087484000074,
+        "generated_tokens": 16,
+        "first_forward_seconds": 51.81436388199995,
+        "first_forward_input_tokens": 1844,
+        "decode_forward_seconds": 6.362679243000002,
+        "decode_forward_count": 15,
+        "mean_decode_forward_seconds": 0.42417861620000014,
+        "ended_with_eos": false
+      },
+      "hit": {
+        "name": "short_4_prefix_hit",
+        "reserve": 16,
+        "mode": "prefix_hit",
+        "elapsed_seconds": 5.946343969999816,
+        "first_token_seconds": 1.7113897169999746,
+        "generated_tokens": 16,
+        "first_forward_seconds": 1.677778521999926,
+        "first_forward_input_tokens": 63,
+        "decode_forward_seconds": 4.192597419999856,
+        "decode_forward_count": 15,
+        "mean_decode_forward_seconds": 0.2795064946666571,
+        "ended_with_eos": false,
+        "clone_seconds": 0.03007214500007649
+      },
+      "exact_token_match": true,
+      "first_differing_token_index": null,
+      "same_generated_length": true,
+      "elapsed_seconds_saved": 52.30352296900014,
+      "elapsed_reduction_fraction": 0.89791660852673,
+      "elapsed_speedup_ratio": 9.795912788240832,
+      "first_token_seconds_saved": 50.1126977670001,
+      "first_token_reduction_fraction": 0.9669769445042647,
+      "first_token_speedup_ratio": 30.281873829910854
+    }
+  ],
+  "full_pairs": [
+    {
+      "reserve": 15,
+      "baseline": {
+        "name": "full_15_no_prefix_reuse",
+        "reserve": 15,
+        "mode": "no_prefix_reuse",
+        "elapsed_seconds": 80.16365550299997,
+        "first_token_seconds": 41.90025651199994,
+        "generated_tokens": 126,
+        "first_forward_seconds": 41.89424786800009,
+        "first_forward_input_tokens": 1844,
+        "decode_forward_seconds": 38.002765691999,
+        "decode_forward_count": 125,
+        "mean_decode_forward_seconds": 0.304022125535992,
+        "ended_with_eos": true,
+        "correctness": {
+          "available": true,
+          "parse_status": "parsed",
+          "facts": {
+            "meal.query": "盖饭",
+            "meal.taste": "清淡",
+            "spending.max_cny": 30,
+            "budget.month": "2026-10",
+            "budget.min_remaining_cny": 15
+          },
+          "gates": [
+            {
+              "fact": "budget.within_limits",
+              "equals": true
+            },
+            {
+              "fact": "budget.reserve_preserved",
+              "equals": true
+            }
+          ],
+          "requested_outputs": [
+            "order.draft",
+            "budget.assessment",
+            "budget.reserve_preserved"
+          ],
+          "expected_request_facts": {
+            "meal.query": "盖饭",
+            "meal.taste": "清淡",
+            "spending.max_cny": 30,
+            "budget.month": "2026-10",
+            "budget.min_remaining_cny": 15
+          },
+          "request_facts_match": true,
+          "explicit_constraint_checks": {
+            "requested_outputs_exactly_expected_three": true,
+            "gates_exactly_both_true": true
+          },
+          "format_corrections": [
+            "removed_one_redundant_closing_brace"
+          ],
+          "cases": {
+            "default": {
+              "status": "completed",
+              "error": null,
+              "draft_count": 1,
+              "expected_status": "completed",
+              "expected_error_type": null,
+              "expected_draft_count": 1,
+              "evidence_checks": {
+                "amounts_match_fixtures": true,
+                "within_budget_true": true,
+                "within_cash_true": true,
+                "reserve_boolean_matches_threshold": true,
+                "draft_total_24_if_success_or_absent_when_blocked": true
+              },
+              "observed_budget_assessment": {
+                "month": "2026-10",
+                "budget_limit_cny": 1000,
+                "spent_cny": 960,
+                "remaining_cny": 40,
+                "planned_amount_cny": 24,
+                "projected_remaining_cny": 16,
+                "cash_available_cny": 4200,
+                "projected_cash_cny": 4176,
+                "within_budget": true,
+                "within_cash": true
+              },
+              "observed_reserve_preserved": true,
+              "observed_draft_total_cny": 24,
+              "passed": true
+            },
+            "insufficient_cash": {
+              "status": "blocked",
+              "error": {
+                "type": "GateRejected",
+                "message": "约束未满足：budget.within_limits；不生成草稿，预算与现金评估见 outputs"
+              },
+              "draft_count": 0,
+              "expected_status": "blocked",
+              "expected_error_type": "GateRejected",
+              "expected_draft_count": 0,
+              "evidence_checks": {
+                "cash_available_zero": true,
+                "projected_cash_minus_24": true,
+                "within_cash_false": true,
+                "draft_output_absent": true
+              },
+              "observed_budget_assessment": {
+                "month": "2026-10",
+                "budget_limit_cny": 1000,
+                "spent_cny": 960,
+                "remaining_cny": 40,
+                "planned_amount_cny": 24,
+                "projected_remaining_cny": 16,
+                "cash_available_cny": 0,
+                "projected_cash_cny": -24,
+                "within_budget": true,
+                "within_cash": false
+              },
+              "observed_reserve_preserved": true,
+              "observed_draft_total_cny": null,
+              "passed": true
+            },
+            "missing_finance_permission": {
+              "status": "blocked",
+              "error": {
+                "type": "PermissionDenied",
+                "message": "finance.budget.evaluate: 缺少权限 finance_budget:read"
+              },
+              "draft_count": 0,
+              "expected_status": "blocked",
+              "expected_error_type": "PermissionDenied",
+              "expected_draft_count": 0,
+              "evidence_checks": {},
+              "observed_budget_assessment": null,
+              "observed_reserve_preserved": null,
+              "observed_draft_total_cny": null,
+              "passed": true
+            }
+          },
+          "expected_checks_passed": true
+        }
+      },
+      "hit": {
+        "name": "full_15_prefix_hit",
+        "reserve": 15,
+        "mode": "prefix_hit",
+        "elapsed_seconds": 35.85409382800003,
+        "first_token_seconds": 1.7236530590000712,
+        "generated_tokens": 126,
+        "first_forward_seconds": 1.6089338719998523,
+        "first_forward_input_tokens": 63,
+        "decode_forward_seconds": 33.899573760998464,
+        "decode_forward_count": 125,
+        "mean_decode_forward_seconds": 0.2711965900879877,
+        "ended_with_eos": true,
+        "clone_seconds": 0.11129744300001221,
+        "correctness": {
+          "available": true,
+          "parse_status": "parsed",
+          "facts": {
+            "meal.query": "盖饭",
+            "meal.taste": "清淡",
+            "spending.max_cny": 30,
+            "budget.month": "2026-10",
+            "budget.min_remaining_cny": 15
+          },
+          "gates": [
+            {
+              "fact": "budget.within_limits",
+              "equals": true
+            },
+            {
+              "fact": "budget.reserve_preserved",
+              "equals": true
+            }
+          ],
+          "requested_outputs": [
+            "order.draft",
+            "budget.assessment",
+            "budget.reserve_preserved"
+          ],
+          "expected_request_facts": {
+            "meal.query": "盖饭",
+            "meal.taste": "清淡",
+            "spending.max_cny": 30,
+            "budget.month": "2026-10",
+            "budget.min_remaining_cny": 15
+          },
+          "request_facts_match": true,
+          "explicit_constraint_checks": {
+            "requested_outputs_exactly_expected_three": true,
+            "gates_exactly_both_true": true
+          },
+          "format_corrections": [
+            "removed_one_redundant_closing_brace"
+          ],
+          "cases": {
+            "default": {
+              "status": "completed",
+              "error": null,
+              "draft_count": 1,
+              "expected_status": "completed",
+              "expected_error_type": null,
+              "expected_draft_count": 1,
+              "evidence_checks": {
+                "amounts_match_fixtures": true,
+                "within_budget_true": true,
+                "within_cash_true": true,
+                "reserve_boolean_matches_threshold": true,
+                "draft_total_24_if_success_or_absent_when_blocked": true
+              },
+              "observed_budget_assessment": {
+                "month": "2026-10",
+                "budget_limit_cny": 1000,
+                "spent_cny": 960,
+                "remaining_cny": 40,
+                "planned_amount_cny": 24,
+                "projected_remaining_cny": 16,
+                "cash_available_cny": 4200,
+                "projected_cash_cny": 4176,
+                "within_budget": true,
+                "within_cash": true
+              },
+              "observed_reserve_preserved": true,
+              "observed_draft_total_cny": 24,
+              "passed": true
+            },
+            "insufficient_cash": {
+              "status": "blocked",
+              "error": {
+                "type": "GateRejected",
+                "message": "约束未满足：budget.within_limits；不生成草稿，预算与现金评估见 outputs"
+              },
+              "draft_count": 0,
+              "expected_status": "blocked",
+              "expected_error_type": "GateRejected",
+              "expected_draft_count": 0,
+              "evidence_checks": {
+                "cash_available_zero": true,
+                "projected_cash_minus_24": true,
+                "within_cash_false": true,
+                "draft_output_absent": true
+              },
+              "observed_budget_assessment": {
+                "month": "2026-10",
+                "budget_limit_cny": 1000,
+                "spent_cny": 960,
+                "remaining_cny": 40,
+                "planned_amount_cny": 24,
+                "projected_remaining_cny": 16,
+                "cash_available_cny": 0,
+                "projected_cash_cny": -24,
+                "within_budget": true,
+                "within_cash": false
+              },
+              "observed_reserve_preserved": true,
+              "observed_draft_total_cny": null,
+              "passed": true
+            },
+            "missing_finance_permission": {
+              "status": "blocked",
+              "error": {
+                "type": "PermissionDenied",
+                "message": "finance.budget.evaluate: 缺少权限 finance_budget:read"
+              },
+              "draft_count": 0,
+              "expected_status": "blocked",
+              "expected_error_type": "PermissionDenied",
+              "expected_draft_count": 0,
+              "evidence_checks": {},
+              "observed_budget_assessment": null,
+              "observed_reserve_preserved": null,
+              "observed_draft_total_cny": null,
+              "passed": true
+            }
+          },
+          "expected_checks_passed": true
+        }
+      },
+      "exact_token_match": true,
+      "first_differing_token_index": null,
+      "same_generated_length": true,
+      "elapsed_seconds_saved": 44.30956167499994,
+      "elapsed_reduction_fraction": 0.5527387866355689,
+      "elapsed_speedup_ratio": 2.235829913525709,
+      "first_token_seconds_saved": 40.17660345299987,
+      "first_token_reduction_fraction": 0.9588629473304912,
+      "first_token_speedup_ratio": 24.308985090251976,
+      "semantic_comparison_available": true,
+      "semantic_match": true,
+      "semantic_fields_compared": [
+        "parsed facts",
+        "gates",
+        "requested_outputs",
+        "each Runtime case: status/error type/draft count/plan/computed facts/outputs/gate checks"
+      ],
+      "semantic_fields_ignored": [
+        "goal wording",
+        "fixture draft UUID",
+        "trace/audit record detail"
+      ],
+      "amortization_pure_build": {
+        "build_seconds": 48.87357706700004,
+        "baseline_seconds": 80.16365550299997,
+        "hit_seconds": 35.85409382800003,
+        "saved_seconds_per_hit": 44.30956167499994,
+        "strictly_faster_min_requests": 2,
+        "modeled_first_request_seconds": 84.72767089500007,
+        "first_request_is_measured": false
+      },
+      "amortization_eager_initialization": {
+        "build_seconds": 48.95312344900003,
+        "baseline_seconds": 80.16365550299997,
+        "hit_seconds": 35.85409382800003,
+        "saved_seconds_per_hit": 44.30956167499994,
+        "strictly_faster_min_requests": 2,
+        "modeled_first_request_seconds": 84.80721727700006,
+        "first_request_is_measured": false
+      }
+    },
+    {
+      "reserve": 20,
+      "baseline": {
+        "name": "full_20_no_prefix_reuse",
+        "reserve": 20,
+        "mode": "no_prefix_reuse",
+        "elapsed_seconds": 76.35793681600012,
+        "first_token_seconds": 37.832266435000065,
+        "generated_tokens": 126,
+        "first_forward_seconds": 37.82680462600001,
+        "first_forward_input_tokens": 1844,
+        "decode_forward_seconds": 38.226509229001294,
+        "decode_forward_count": 125,
+        "mean_decode_forward_seconds": 0.30581207383201037,
+        "ended_with_eos": true,
+        "correctness": {
+          "available": true,
+          "parse_status": "parsed",
+          "facts": {
+            "meal.query": "盖饭",
+            "meal.taste": "清淡",
+            "spending.max_cny": 30,
+            "budget.month": "2026-10",
+            "budget.min_remaining_cny": 20
+          },
+          "gates": [
+            {
+              "fact": "budget.within_limits",
+              "equals": true
+            },
+            {
+              "fact": "budget.reserve_preserved",
+              "equals": true
+            }
+          ],
+          "requested_outputs": [
+            "order.draft",
+            "budget.assessment",
+            "budget.reserve_preserved"
+          ],
+          "expected_request_facts": {
+            "meal.query": "盖饭",
+            "meal.taste": "清淡",
+            "spending.max_cny": 30,
+            "budget.month": "2026-10",
+            "budget.min_remaining_cny": 20
+          },
+          "request_facts_match": true,
+          "explicit_constraint_checks": {
+            "requested_outputs_exactly_expected_three": true,
+            "gates_exactly_both_true": true
+          },
+          "format_corrections": [
+            "removed_one_redundant_closing_brace"
+          ],
+          "cases": {
+            "default": {
+              "status": "blocked",
+              "error": {
+                "type": "GateRejected",
+                "message": "约束未满足：budget.reserve_preserved；不生成草稿，预算与现金评估见 outputs"
+              },
+              "draft_count": 0,
+              "expected_status": "blocked",
+              "expected_error_type": "GateRejected",
+              "expected_draft_count": 0,
+              "evidence_checks": {
+                "amounts_match_fixtures": true,
+                "within_budget_true": true,
+                "within_cash_true": true,
+                "reserve_boolean_matches_threshold": true,
+                "draft_total_24_if_success_or_absent_when_blocked": true
+              },
+              "observed_budget_assessment": {
+                "month": "2026-10",
+                "budget_limit_cny": 1000,
+                "spent_cny": 960,
+                "remaining_cny": 40,
+                "planned_amount_cny": 24,
+                "projected_remaining_cny": 16,
+                "cash_available_cny": 4200,
+                "projected_cash_cny": 4176,
+                "within_budget": true,
+                "within_cash": true
+              },
+              "observed_reserve_preserved": false,
+              "observed_draft_total_cny": null,
+              "passed": true
+            },
+            "insufficient_cash": {
+              "status": "blocked",
+              "error": {
+                "type": "GateRejected",
+                "message": "约束未满足：budget.within_limits；不生成草稿，预算与现金评估见 outputs"
+              },
+              "draft_count": 0,
+              "expected_status": "blocked",
+              "expected_error_type": "GateRejected",
+              "expected_draft_count": 0,
+              "evidence_checks": {
+                "cash_available_zero": true,
+                "projected_cash_minus_24": true,
+                "within_cash_false": true,
+                "draft_output_absent": true
+              },
+              "observed_budget_assessment": {
+                "month": "2026-10",
+                "budget_limit_cny": 1000,
+                "spent_cny": 960,
+                "remaining_cny": 40,
+                "planned_amount_cny": 24,
+                "projected_remaining_cny": 16,
+                "cash_available_cny": 0,
+                "projected_cash_cny": -24,
+                "within_budget": true,
+                "within_cash": false
+              },
+              "observed_reserve_preserved": false,
+              "observed_draft_total_cny": null,
+              "passed": true
+            },
+            "missing_finance_permission": {
+              "status": "blocked",
+              "error": {
+                "type": "PermissionDenied",
+                "message": "finance.budget.evaluate: 缺少权限 finance_budget:read"
+              },
+              "draft_count": 0,
+              "expected_status": "blocked",
+              "expected_error_type": "PermissionDenied",
+              "expected_draft_count": 0,
+              "evidence_checks": {},
+              "observed_budget_assessment": null,
+              "observed_reserve_preserved": null,
+              "observed_draft_total_cny": null,
+              "passed": true
+            }
+          },
+          "expected_checks_passed": true
+        }
+      },
+      "hit": {
+        "name": "full_20_prefix_hit",
+        "reserve": 20,
+        "mode": "prefix_hit",
+        "elapsed_seconds": 36.190242002000105,
+        "first_token_seconds": 1.695863602000145,
+        "generated_tokens": 126,
+        "first_forward_seconds": 1.6282261320000089,
+        "first_forward_input_tokens": 63,
+        "decode_forward_seconds": 34.26237753199939,
+        "decode_forward_count": 125,
+        "mean_decode_forward_seconds": 0.27409902025599514,
+        "ended_with_eos": true,
+        "clone_seconds": 0.06491344599999138,
+        "correctness": {
+          "available": true,
+          "parse_status": "parsed",
+          "facts": {
+            "meal.query": "盖饭",
+            "meal.taste": "清淡",
+            "spending.max_cny": 30,
+            "budget.month": "2026-10",
+            "budget.min_remaining_cny": 20
+          },
+          "gates": [
+            {
+              "fact": "budget.within_limits",
+              "equals": true
+            },
+            {
+              "fact": "budget.reserve_preserved",
+              "equals": true
+            }
+          ],
+          "requested_outputs": [
+            "order.draft",
+            "budget.assessment",
+            "budget.reserve_preserved"
+          ],
+          "expected_request_facts": {
+            "meal.query": "盖饭",
+            "meal.taste": "清淡",
+            "spending.max_cny": 30,
+            "budget.month": "2026-10",
+            "budget.min_remaining_cny": 20
+          },
+          "request_facts_match": true,
+          "explicit_constraint_checks": {
+            "requested_outputs_exactly_expected_three": true,
+            "gates_exactly_both_true": true
+          },
+          "format_corrections": [
+            "removed_one_redundant_closing_brace"
+          ],
+          "cases": {
+            "default": {
+              "status": "blocked",
+              "error": {
+                "type": "GateRejected",
+                "message": "约束未满足：budget.reserve_preserved；不生成草稿，预算与现金评估见 outputs"
+              },
+              "draft_count": 0,
+              "expected_status": "blocked",
+              "expected_error_type": "GateRejected",
+              "expected_draft_count": 0,
+              "evidence_checks": {
+                "amounts_match_fixtures": true,
+                "within_budget_true": true,
+                "within_cash_true": true,
+                "reserve_boolean_matches_threshold": true,
+                "draft_total_24_if_success_or_absent_when_blocked": true
+              },
+              "observed_budget_assessment": {
+                "month": "2026-10",
+                "budget_limit_cny": 1000,
+                "spent_cny": 960,
+                "remaining_cny": 40,
+                "planned_amount_cny": 24,
+                "projected_remaining_cny": 16,
+                "cash_available_cny": 4200,
+                "projected_cash_cny": 4176,
+                "within_budget": true,
+                "within_cash": true
+              },
+              "observed_reserve_preserved": false,
+              "observed_draft_total_cny": null,
+              "passed": true
+            },
+            "insufficient_cash": {
+              "status": "blocked",
+              "error": {
+                "type": "GateRejected",
+                "message": "约束未满足：budget.within_limits；不生成草稿，预算与现金评估见 outputs"
+              },
+              "draft_count": 0,
+              "expected_status": "blocked",
+              "expected_error_type": "GateRejected",
+              "expected_draft_count": 0,
+              "evidence_checks": {
+                "cash_available_zero": true,
+                "projected_cash_minus_24": true,
+                "within_cash_false": true,
+                "draft_output_absent": true
+              },
+              "observed_budget_assessment": {
+                "month": "2026-10",
+                "budget_limit_cny": 1000,
+                "spent_cny": 960,
+                "remaining_cny": 40,
+                "planned_amount_cny": 24,
+                "projected_remaining_cny": 16,
+                "cash_available_cny": 0,
+                "projected_cash_cny": -24,
+                "within_budget": true,
+                "within_cash": false
+              },
+              "observed_reserve_preserved": false,
+              "observed_draft_total_cny": null,
+              "passed": true
+            },
+            "missing_finance_permission": {
+              "status": "blocked",
+              "error": {
+                "type": "PermissionDenied",
+                "message": "finance.budget.evaluate: 缺少权限 finance_budget:read"
+              },
+              "draft_count": 0,
+              "expected_status": "blocked",
+              "expected_error_type": "PermissionDenied",
+              "expected_draft_count": 0,
+              "evidence_checks": {},
+              "observed_budget_assessment": null,
+              "observed_reserve_preserved": null,
+              "observed_draft_total_cny": null,
+              "passed": true
+            }
+          },
+          "expected_checks_passed": true
+        }
+      },
+      "exact_token_match": true,
+      "first_differing_token_index": null,
+      "same_generated_length": true,
+      "elapsed_seconds_saved": 40.167694814000015,
+      "elapsed_reduction_fraction": 0.5260447896960887,
+      "elapsed_speedup_ratio": 2.109904012572784,
+      "first_token_seconds_saved": 36.13640283299992,
+      "first_token_reduction_fraction": 0.9551741473138062,
+      "first_token_speedup_ratio": 22.308554998397113,
+      "semantic_comparison_available": true,
+      "semantic_match": true,
+      "semantic_fields_compared": [
+        "parsed facts",
+        "gates",
+        "requested_outputs",
+        "each Runtime case: status/error type/draft count/plan/computed facts/outputs/gate checks"
+      ],
+      "semantic_fields_ignored": [
+        "goal wording",
+        "fixture draft UUID",
+        "trace/audit record detail"
+      ],
+      "amortization_pure_build": {
+        "build_seconds": 48.87357706700004,
+        "baseline_seconds": 76.35793681600012,
+        "hit_seconds": 36.190242002000105,
+        "saved_seconds_per_hit": 40.167694814000015,
+        "strictly_faster_min_requests": 2,
+        "modeled_first_request_seconds": 85.06381906900015,
+        "first_request_is_measured": false
+      },
+      "amortization_eager_initialization": {
+        "build_seconds": 48.95312344900003,
+        "baseline_seconds": 76.35793681600012,
+        "hit_seconds": 36.190242002000105,
+        "saved_seconds_per_hit": 40.167694814000015,
+        "strictly_faster_min_requests": 2,
+        "modeled_first_request_seconds": 85.14336545100014,
+        "first_request_is_measured": false
+      }
+    }
+  ],
+  "short_group_statistics": {
+    "no_prefix_reuse": {
+      "elapsed_seconds": {
+        "count": 4,
+        "median": 54.55769231350007,
+        "min": 48.18020064799998,
+        "max": 58.24986693899996
+      },
+      "first_token_seconds": {
+        "count": 4,
+        "median": 49.276703612000006,
+        "min": 43.944183104999865,
+        "max": 52.08562646300015
+      }
+    },
+    "prefix_hit": {
+      "elapsed_seconds": {
+        "count": 4,
+        "median": 6.5281451814998945,
+        "min": 5.946343969999816,
+        "max": 7.739089212999943
+      },
+      "first_token_seconds": {
+        "count": 4,
+        "median": 1.7155559194999341,
+        "min": 1.7042970919999334,
+        "max": 1.7264377819999481
+      }
+    }
+  },
+  "short_paired_statistics": {
+    "elapsed_seconds_saved": {
+      "count": 4,
+      "median": 47.70564800150021,
+      "min": 41.08890969599997,
+      "max": 52.30352296900014
+    },
+    "elapsed_reduction_fraction": {
+      "count": 4,
+      "median": 0.8750276899477927,
+      "min": 0.8484570193783313,
+      "max": 0.89791660852673
+    },
+    "elapsed_speedup_ratio": {
+      "count": 4,
+      "median": 8.26275343458646,
+      "min": 6.598787986733135,
+      "max": 9.795912788240832
+    },
+    "first_token_seconds_saved": {
+      "count": 4,
+      "median": 47.557789862500044,
+      "min": 42.22446098299997,
+      "max": 50.38132937100022
+    },
+    "first_token_reduction_fraction": {
+      "count": 4,
+      "median": 0.9650157254669687,
+      "min": 0.9608657619623784,
+      "max": 0.9672789364795179
+    },
+    "first_token_speedup_ratio": {
+      "count": 4,
+      "median": 28.674387186724715,
+      "min": 25.553071942748772,
+      "max": 30.561353831730994
+    }
+  },
+  "short_median_amortization_pure_build": {
+    "build_seconds": 48.87357706700004,
+    "baseline_seconds": 54.55769231350007,
+    "hit_seconds": 6.5281451814998945,
+    "saved_seconds_per_hit": 48.029547132000175,
+    "strictly_faster_min_requests": 2,
+    "modeled_first_request_seconds": 55.40172224849994,
+    "first_request_is_measured": false
+  },
+  "short_median_amortization_eager_initialization": {
+    "build_seconds": 48.95312344900003,
+    "baseline_seconds": 54.55769231350007,
+    "hit_seconds": 6.5281451814998945,
+    "saved_seconds_per_hit": 48.029547132000175,
+    "strictly_faster_min_requests": 2,
+    "modeled_first_request_seconds": 55.481268630499926,
+    "first_request_is_measured": false
+  },
+  "amortization_notes": [
+    "C + N*H versus N*B; minimum N for strict improvement = floor(C/(B-H))+1, only when B>H.",
+    "Pure build excludes initial clone; eager initialization includes the measured lookup/build/clone then discarded clone.",
+    "First-request totals and amortization are modeled from measured components; an integrated miss request was not timed.",
+    "Assumes this prefix remains reusable for every request; does not estimate actual cache hit rate."
+  ],
+  "memory": {
+    "logical_template_bytes": 204259328,
+    "logical_template_mib": 194.796875,
+    "logical_template_plus_request_clone_mib": 389.59375,
+    "run_rss_before_bytes": {
+      "count": 12,
+      "median": 4434180096.0,
+      "min": 4299030528,
+      "max": 4567793664
+    },
+    "run_rss_after_bytes": {
+      "count": 12,
+      "median": 4492312576.0,
+      "min": 4434128896,
+      "max": 4566523904
+    },
+    "process_cumulative_peak_rss_bytes": 4898062336,
+    "rss_note": "Both groups retain the base template. Hit RSS includes its still-live request clone; baseline internal generation cache may be released. These values are observations, not a net deployment-memory comparison. Peak is cumulative process peak."
+  },
+  "validation": {
+    "data_complete": true,
+    "all_pairs_exact_token_match": true,
+    "all_full_pairs_semantic_match": true,
+    "all_expected_runtime_checks_passed": true,
+    "full_completions_ended_with_eos": true
+  },
+  "source_results_sha256": "6c7c6e117c46326d57aad37458c3b5eecf385feb57348a8c5840a7827dc5b2bf"
+}
